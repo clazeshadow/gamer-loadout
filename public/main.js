@@ -57,17 +57,66 @@ function renderLoadout(data){
   result.appendChild(wrapper)
 }
 
-document.getElementById('generate').addEventListener('click', ()=>{
-  const game = document.getElementById('game').value
-  const playstyle = document.getElementById('playstyle').value
-  const btn = document.getElementById('generate')
-  btn.disabled = true
-  btn.textContent = 'Generating...'
+// Navigation
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('page-active'))
+  const el = document.getElementById(id)
+  if (el) el.classList.add('page-active')
+}
 
-  setTimeout(()=>{
-    const data = mockLoadout(game, playstyle)
-    renderLoadout(data)
-    btn.disabled = false
-    btn.textContent = 'Generate Loadout'
-  }, 700)
+document.querySelectorAll('[data-route]').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    e.preventDefault()
+    const href = a.getAttribute('href') || '#home'
+    const id = href.replace('#','')
+    history.pushState({page:id}, '', href)
+    showPage(id)
+  })
 })
+
+window.addEventListener('popstate', (e)=>{
+  const id = (e.state && e.state.page) || location.hash.replace('#','') || 'home'
+  showPage(id)
+})
+
+// Home: generate loadout
+function initHome(){
+  const btn = document.getElementById('generate')
+  if (!btn) return
+  btn.addEventListener('click', ()=>{
+    const game = document.getElementById('game').value
+    const playstyle = document.getElementById('playstyle').value
+    btn.disabled = true
+    btn.textContent = 'Generating...'
+
+    setTimeout(()=>{
+      const data = mockLoadout(game, playstyle)
+      renderLoadout(data)
+      btn.disabled = false
+      btn.textContent = 'Generate Loadout'
+    }, 700)
+  })
+}
+
+// Subscribe handlers
+function initSubscribe(){
+  document.querySelectorAll('.subscribe').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const plan = b.getAttribute('data-plan')
+      const out = document.getElementById('subscribe-result')
+      out.innerHTML = `<div class="panel">Selected plan: <strong>${plan}</strong>. (No payment connected in demo.)</div>`
+    })
+  })
+}
+
+// Contact page removed — no handlers
+
+// Init on load
+document.addEventListener('DOMContentLoaded', ()=>{
+  const start = location.hash.replace('#','') || 'home'
+  history.replaceState({page:start}, '', `#${start}`)
+  showPage(start)
+  initHome()
+  initSubscribe()
+})
+

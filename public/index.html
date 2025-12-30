@@ -10,7 +10,7 @@
     <header class="site-header">
       <div class="container header-inner">
         <div style="display:flex;align-items:center;gap:12px">
-          <img src="https://chatgpt.com/s/m_69542e235d0081918636777aa5f4c7aa" alt="LoadoutX logo" style="height:36px;border-radius:6px;object-fit:cover">
+          <img id="site-logo" src="/assets/logo.png" alt="LoadoutX logo" style="height:36px;border-radius:6px;object-fit:cover" onerror="this.onerror=null;this.src='https://chatgpt.com/s/m_69542e235d0081918636777aa5f4c7aa'">
           <div>
             <div class="logo">LoadoutX</div>
             <div style="font-size:12px;color:var(--muted);margin-top:2px">Unleash your X-Factor</div>
@@ -20,7 +20,6 @@
           <a href="#home" data-route>Home</a>
           <a href="#subscribe" data-route>Subscribe</a>
           <a href="#about" data-route>About</a>
-          <a href="#contact" data-route>Contact</a>
         </nav>
       </div>
     </header>
@@ -118,19 +117,7 @@
         </div>
       </section>
 
-      <section id="contact" class="page">
-        <h2>Contact Us</h2>
-        <p class="lead">Have feedback or questions? Reach out.</p>
-
-        <form id="contact-form" class="panel">
-          <label>Name <input type="text" id="contact-name" required></label>
-          <label>Email <input type="email" id="contact-email" required></label>
-          <label>Message <textarea id="contact-message" rows="4" required></textarea></label>
-          <button type="submit">Send Message</button>
-        </form>
-
-        <div id="contact-result" class="result"></div>
-      </section>
+      <!-- Contact page removed per request -->
     </main>
 
     <script src="/main.js"></script>
