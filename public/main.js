@@ -30,6 +30,13 @@ function renderLoadout(data){
   title.textContent = data.weapon
   card.appendChild(title)
 
+  // source badge
+  const badge = document.createElement('span')
+  badge.className = 'badge'
+  badge.textContent = data.source === 'ai' ? 'AI' : 'Preset'
+  badge.style.float = 'right'
+  title.appendChild(badge)
+
   const attTitle = document.createElement('div')
   attTitle.textContent = 'Attachments'
   const attList = document.createElement('ul')
