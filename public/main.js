@@ -64,37 +64,46 @@ function showPage(id){
   if (el) el.classList.add('page-active')
 }
 
-document.querySelectorAll('[data-route]').forEach(a=>{
-  a.addEventListener('click', (e)=>{
-    e.preventDefault()
-    const href = a.getAttribute('href') || '#home'
-    const id = href.replace('#','')
-    history.pushState({page:id}, '', href)
-    showPage(id)
-  })
-})
-
-window.addEventListener('popstate', (e)=>{
-  const id = (e.state && e.state.page) || location.hash.replace('#','') || 'home'
-  showPage(id)
-})
-
 // Home: generate loadout
 function initHome(){
   const btn = document.getElementById('generate')
   if (!btn) return
+  const gameSelect = document.getElementById('game')
+  const platformSelect = document.getElementById('platform')
+  if (gameSelect){
+    gameSelect.addEventListener('change', ()=>{
+      updateHomePlatforms(gameSelect.value)
+    })
+  }
+
   btn.addEventListener('click', ()=>{
-    const game = document.getElementById('game').value
+    const gameId = document.getElementById('game').value
     const playstyle = document.getElementById('playstyle').value
+    const platform = document.getElementById('platform') ? document.getElementById('platform').value : null
     btn.disabled = true
     btn.textContent = 'Generating...'
 
     setTimeout(()=>{
-      const data = mockLoadout(game, playstyle)
-      renderLoadout(data)
+      // prefer platform-specific data from GAMES_DATA
+      const dataSrc = window.GAMES_DATA || { games: [] }
+      const game = dataSrc.games.find(g => g.id === gameId)
+      let out
+      if (game && game.platforms){
+        const pf = (game.platforms.find(p => p.platform === platform) || game.platforms[0])
+        out = {
+          weapon: pf.recommendedLoadout.primary || 'Recommended Primary',
+          attachments: pf.recommendedLoadout.attachments || [],
+          perks: pf.recommendedLoadout.perks || [],
+          source: playstyle === 'aggressive' ? 'preset' : 'ai'
+        }
+      } else {
+        out = mockLoadout(gameId, playstyle)
+      }
+
+      renderLoadout(out)
       btn.disabled = false
       btn.textContent = 'Generate Loadout'
-    }, 700)
+    }, 400)
   })
 }
 
@@ -120,6 +129,8 @@ async function initGames(){
   try {
     const res = await fetch('/data/games.json')
     data = await res.json()
+    // expose globally for other functions
+    window.GAMES_DATA = data
   } catch (e) {
     listEl.innerHTML = '<div class="muted">Failed to load games data.</div>'
     return
@@ -256,6 +267,21 @@ async function initGames(){
   populateHomeGames()
 }
 
+function updateHomePlatforms(gameId){
+  const platformSelect = document.getElementById('platform')
+  if (!platformSelect) return
+  platformSelect.innerHTML = ''
+  const data = window.GAMES_DATA || { games: [] }
+  const g = data.games.find(x=>x.id===gameId)
+  const platforms = (g && g.platforms) ? g.platforms.map(p=>p.platform) : ['PC']
+  platforms.forEach(p => {
+    const o = document.createElement('option')
+    o.value = p
+    o.textContent = p
+    platformSelect.appendChild(o)
+  })
+}
+
 // Load a game's platform-specific loadout into the Home generator
 function loadIntoGenerator(gameId, platform){
   fetch('/data/games.json').then(r=>r.json()).then(d=>{
@@ -285,11 +311,35 @@ renderList()
 // Contact page removed — no handlers
 
 // Init on load
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener('DOMContentLoaded', async ()=>{
+  // attach nav handlers
+  document.querySelectorAll('[data-route]').forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      e.preventDefault()
+      const href = a.getAttribute('href') || '#home'
+      const id = href.replace('#','')
+      history.pushState({page:id}, '', href)
+      showPage(id)
+    })
+  })
+
+  window.addEventListener('popstate', (e)=>{
+    const id = (e.state && e.state.page) || location.hash.replace('#','') || 'home'
+    showPage(id)
+  })
+
   const start = location.hash.replace('#','') || 'home'
   history.replaceState({page:start}, '', `#${start}`)
   showPage(start)
+
+  // load games data first (populates Home selects)
+  await initGames()
+
+  // ensure platform select is set for current game
+  const gs = document.getElementById('game')
+  if (gs && gs.value) updateHomePlatforms(gs.value)
+
   initHome()
   initSubscribe()
-  initGames()
+  // games already initialized by initGames
 
