@@ -7,31 +7,129 @@
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div style="display:flex;align-items:center;gap:12px">
+          <img src="https://chatgpt.com/s/m_69542e235d0081918636777aa5f4c7aa" alt="LoadoutX logo" style="height:36px;border-radius:6px;object-fit:cover">
+          <div>
+            <div class="logo">LoadoutX</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Unleash your X-Factor</div>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="#home" data-route>Home</a>
+          <a href="#subscribe" data-route>Subscribe</a>
+          <a href="#about" data-route>About</a>
+          <a href="#contact" data-route>Contact</a>
+        </nav>
+      </div>
+    </header>
+
     <main class="container">
-      <h1>Gamer Loadout — Demo</h1>
+      <section id="home" class="page page-active">
+        <h2>LOADOUTS THAT DOMINATE</h2>
+        <p class="lead">Get meta builds, sensitivity tweaks, and pro settings tips to level up your gameplay and frag harder.</p>
 
-      <section class="controls">
-        <label>Game
-          <select id="game">
-            <option value="warzone">Warzone</option>
-            <option value="apex">Apex Legends</option>
-            <option value="valorant">Valorant</option>
-          </select>
-        </label>
+        <div class="panel">
+          <h3>Key Features</h3>
+          <ul>
+            <li>Game-specific loadout recommendations</li>
+            <li>Personalized settings and sensitivity tips</li>
+            <li>Pro-tested builds and meta tracking</li>
+          </ul>
+        </div>
 
-        <label>Playstyle
-          <select id="playstyle">
-            <option value="aggressive">Aggressive</option>
-            <option value="balanced">Balanced</option>
-            <option value="defensive">Defensive</option>
-          </select>
-        </label>
+        <div class="panel controls">
+          <label>Game
+            <select id="game">
+              <option value="warzone">Warzone</option>
+              <option value="apex">Apex Legends</option>
+              <option value="valorant">Valorant</option>
+            </select>
+          </label>
 
-        <button id="generate">Generate Loadout</button>
+          <label>Playstyle
+            <select id="playstyle">
+              <option value="aggressive">Aggressive</option>
+              <option value="balanced">Balanced</option>
+              <option value="defensive">Defensive</option>
+            </select>
+          </label>
+
+          <button id="generate">Generate Loadout</button>
+        </div>
+
+        <section id="result" class="result">
+          <p class="hint">Click "Generate Loadout" to see a mock build.</p>
+        </section>
       </section>
 
-      <section id="result" class="result">
-        <p class="hint">Click &ldquo;Generate Loadout&rdquo; to see a mock build.</p>
+      <section id="subscribe" class="page">
+        <h2>Subscribe</h2>
+        <p class="lead">Choose a plan to get AI-optimized loadouts and extra features.</p>
+
+        <div class="plans">
+          <div class="card plan">
+            <h3>Free</h3>
+            <p class="muted">Free — 10 daily chats</p>
+            <ul>
+              <li>10 daily chats for loadout suggestions</li>
+              <li>Basic settings tips</li>
+            </ul>
+            <button class="subscribe" data-plan="free">Choose Free</button>
+          </div>
+
+          <div class="card plan">
+            <h3>X-Elite</h3>
+            <p class="muted">$5 / month</p>
+            <ul>
+              <li>Unlimited chats</li>
+              <li>Personalized loadouts & settings</li>
+              <li>Game recommendations based on preferences</li>
+            </ul>
+            <button class="subscribe" data-plan="x-elite">Choose X-Elite</button>
+          </div>
+
+          <div class="card plan">
+            <h3>X-Ascended</h3>
+            <p class="muted">$60 one-time</p>
+            <ul>
+              <li>All X-Elite benefits</li>
+              <li>Priority for new testing features</li>
+            </ul>
+            <button class="subscribe" data-plan="x-ascended">Choose X-Ascended</button>
+          </div>
+        </div>
+
+        <div id="subscribe-result" class="result"></div>
+      </section>
+
+      <section id="about" class="page">
+        <h2>About Us</h2>
+        <p class="lead">We build tools to help players quickly find competitive loadouts.</p>
+        <div id="about-content">
+          <p>LoadoutX was founded by two cousins who want to help make the gaming landscape fair by recommending the best gameplay settings and loadouts for players of any game.</p>
+          <p>We focus on actionable, tested recommendations so players of all skill levels can find competitive setups quickly.</p>
+          <h4>Team</h4>
+          <ul>
+            <li><strong>Daniel Denton</strong> — Founder & Developer</li>
+            <li><strong>Conner Singleton</strong> — Founder & Developer</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="contact" class="page">
+        <h2>Contact Us</h2>
+        <p class="lead">Have feedback or questions? Reach out.</p>
+
+        <form id="contact-form" class="panel">
+          <label>Name <input type="text" id="contact-name" required></label>
+          <label>Email <input type="email" id="contact-email" required></label>
+          <label>Message <textarea id="contact-message" rows="4" required></textarea></label>
+          <button type="submit">Send Message</button>
+        </form>
+
+        <div id="contact-result" class="result"></div>
       </section>
     </main>
 
