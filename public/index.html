@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gamer Loadout — Demo</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <main class="container">
+      <h1>Gamer Loadout — Demo</h1>
+
+      <section class="controls">
+        <label>Game
+          <select id="game">
+            <option value="warzone">Warzone</option>
+            <option value="apex">Apex Legends</option>
+            <option value="valorant">Valorant</option>
+          </select>
+        </label>
+
+        <label>Playstyle
+          <select id="playstyle">
+            <option value="aggressive">Aggressive</option>
+            <option value="balanced">Balanced</option>
+            <option value="defensive">Defensive</option>
+          </select>
+        </label>
+
+        <button id="generate">Generate Loadout</button>
+      </section>
+
+      <section id="result" class="result">
+        <p class="hint">Click &ldquo;Generate Loadout&rdquo; to see a mock build.</p>
+      </section>
+    </main>
+
+    <script src="/main.js"></script>
+  </body>
+</html>
