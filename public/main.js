@@ -90,10 +90,14 @@ function initHome(){
       let out
       if (game && game.platforms){
         const pf = (game.platforms.find(p => p.platform === platform) || game.platforms[0])
+        // support playstyle-specific variants if provided
+        const base = pf.recommendedLoadout || {}
+        const variant = (base.variants && base.variants[playstyle]) ? base.variants[playstyle] : null
+        const chosen = variant || base
         out = {
-          weapon: pf.recommendedLoadout.primary || 'Recommended Primary',
-          attachments: pf.recommendedLoadout.attachments || [],
-          perks: pf.recommendedLoadout.perks || [],
+          weapon: chosen.primary || chosen.primary || 'Recommended Primary',
+          attachments: chosen.attachments || [],
+          perks: chosen.perks || [],
           source: playstyle === 'aggressive' ? 'preset' : 'ai'
         }
       } else {
@@ -145,7 +149,17 @@ async function initGames(){
       const title = document.createElement('h4')
       title.textContent = g.name
       const desc = document.createElement('p')
-      desc.textContent = g.recommendedLoadout.primary || ''
+      // safely derive a primary description from top-level or first platform
+      let primaryDesc = ''
+      try {
+        if (g.recommendedLoadout && g.recommendedLoadout.primary) primaryDesc = g.recommendedLoadout.primary
+        else if (g.platforms && g.platforms.length){
+          const first = g.platforms[0]
+          const firstObj = (typeof first === 'string') ? null : first
+          if (firstObj && firstObj.recommendedLoadout && firstObj.recommendedLoadout.primary) primaryDesc = firstObj.recommendedLoadout.primary
+        }
+      } catch (e){ primaryDesc = '' }
+      desc.textContent = primaryDesc || ''
       card.appendChild(title)
       card.appendChild(desc)
       card.addEventListener('click', ()=> showDetail(g))
@@ -172,8 +186,9 @@ async function initGames(){
     pfSelect.style.marginTop = '6px'
     (g.platforms || []).forEach(p => {
       const o = document.createElement('option')
-      o.value = p.platform
-      o.textContent = p.platform
+      const val = (typeof p === 'string') ? p : (p.platform || '')
+      o.value = val
+      o.textContent = val
       pfSelect.appendChild(o)
     })
     platformWrapper.appendChild(pfLabel)
@@ -232,8 +247,8 @@ async function initGames(){
 
     pfSelect.addEventListener('change', ()=>{
       const sel = pfSelect.value
-      const pf = (g.platforms || []).find(x=>x.platform===sel)
-      if (pf) renderPlatform(pf)
+      const pf = (g.platforms || []).find(x => (typeof x === 'string') ? x === sel : (x.platform === sel))
+      if (pf) renderPlatform((typeof pf === 'string') ? { platform: pf, recommendedLoadout: {} } : pf)
     })
 
     loadBtn.addEventListener('click', ()=>{
@@ -253,17 +268,46 @@ async function initGames(){
   function populateHomeGames(){
     const homeSelect = document.getElementById('game')
     if (!homeSelect) return
+    // add a placeholder then populate
     homeSelect.innerHTML = ''
+    const ph = document.createElement('option')
+    ph.value = ''
+    ph.textContent = 'Choose a game...'
+    ph.disabled = true
+    ph.selected = true
+    homeSelect.appendChild(ph)
+
     data.games.forEach(g => {
       const opt = document.createElement('option')
       opt.value = g.id
       opt.textContent = g.name
       homeSelect.appendChild(opt)
     })
+
+    // if no selection yet, select the first game and update platforms
+    if (data.games.length && (!homeSelect.value || homeSelect.value === '')){
+      homeSelect.selectedIndex = 1
+      updateHomePlatforms(homeSelect.value)
+    }
   }
+  // expose for manual re-population if needed
+  window.populateHomeGames = populateHomeGames
+
+  // ensure change listener so selecting a game updates platforms
+  function attachHomeChange(){
+    const h = document.getElementById('game')
+    if (!h) return
+    h.removeEventListener('change', updateHomePlatforms)
+    h.addEventListener('change', function onChange(){
+      updateHomePlatforms(h.value)
+    })
+  }
+  window.attachHomeChange = attachHomeChange
 
   search.addEventListener('input', (e)=> renderList(e.target.value))
   renderList()
+  // expose renderList so DOMContentLoaded can force a refresh if needed
+  window.renderGamesList = renderList
   populateHomeGames()
 }
 
@@ -273,13 +317,50 @@ function updateHomePlatforms(gameId){
   platformSelect.innerHTML = ''
   const data = window.GAMES_DATA || { games: [] }
   const g = data.games.find(x=>x.id===gameId)
-  const platforms = (g && g.platforms) ? g.platforms.map(p=>p.platform) : ['PC']
-  platforms.forEach(p => {
+  const rawPlatforms = (g && g.platforms) ? g.platforms.map(p=>p.platform) : ['PC']
+
+  // normalize and infer common console platforms
+  const set = new Set()
+  rawPlatforms.forEach(praw => {
+    const p = (praw || '').toLowerCase()
+    if (p.includes('pc')) set.add('PC')
+    if (p.includes('playstation')) set.add('PlayStation')
+    if (p.includes('xbox')) set.add('Xbox')
+    // treat switch mentions as both legacy Switch and Nintendo Switch 2
+    if (p.includes('switch')){
+      set.add('Switch')
+      set.add('Nintendo Switch 2')
+    }
+    if (p.includes('console')) {
+      // if generic 'Console' is present, offer main consoles
+      set.add('PlayStation')
+      set.add('Xbox')
+      set.add('Switch')
+      set.add('Nintendo Switch 2')
+    }
+    // fallback to verbatim if nothing matched
+    if (!p.includes('pc') && !p.includes('playstation') && !p.includes('xbox') && !p.includes('switch') && !p.includes('console')){
+      if (praw && praw.trim()) set.add(praw)
+    }
+  })
+
+  // prefer ordering: PC, PlayStation, Xbox, Switch, then others
+  const order = ['PC','PlayStation','Xbox','Switch','Nintendo Switch 2']
+  const final = []
+  // ensure Xbox and Nintendo Switch 2 are available as options
+  if (!set.has('Xbox')) set.add('Xbox')
+  if (!set.has('Nintendo Switch 2')) set.add('Nintendo Switch 2')
+  order.forEach(k=>{ if (set.has(k)) final.push(k); set.delete(k) })
+  Array.from(set).forEach(x=> final.push(x))
+
+  final.forEach(p => {
     const o = document.createElement('option')
     o.value = p
     o.textContent = p
     platformSelect.appendChild(o)
   })
+  // select first available platform
+  if (platformSelect.options.length) platformSelect.selectedIndex = 0
 }
 
 // Load a game's platform-specific loadout into the Home generator
@@ -292,20 +373,19 @@ function loadIntoGenerator(gameId, platform){
     if (homeSelect){ homeSelect.value = g.id }
     const playSelect = document.getElementById('playstyle')
     if (playSelect) playSelect.value = 'balanced'
-
+    // prefer variants per playstyle if available
+    const base = pf.recommendedLoadout || {}
+    const variant = (base.variants && base.variants['balanced']) ? base.variants['balanced'] : null
+    const chosen = variant || base
     const data = {
-      weapon: pf.recommendedLoadout.primary || 'Recommended Primary',
-      attachments: pf.recommendedLoadout.attachments || [],
-      perks: pf.recommendedLoadout.perks || [],
+      weapon: chosen.primary || 'Recommended Primary',
+      attachments: chosen.attachments || [],
+      perks: chosen.perks || [],
       source: 'preset'
     }
     showPage('home')
     renderLoadout(data)
   })
-}
-
-search.addEventListener('input', (e)=> renderList(e.target.value))
-renderList()
 }
 
 // Contact page removed — no handlers
@@ -335,6 +415,14 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   // load games data first (populates Home selects)
   await initGames()
 
+  // sanity check: if home select empty, repopulate and attach change listener
+  const gsCheck = document.getElementById('game')
+  if (gsCheck && gsCheck.options.length <= 1){
+    console.warn('Home game select appears empty; repopulating from GAMES_DATA')
+    if (window.populateHomeGames) window.populateHomeGames()
+  }
+  if (window.attachHomeChange) window.attachHomeChange()
+
   // ensure platform select is set for current game
   const gs = document.getElementById('game')
   if (gs && gs.value) updateHomePlatforms(gs.value)
@@ -342,4 +430,39 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   initHome()
   initSubscribe()
   // games already initialized by initGames
+  // debug status panel (helps verify dropdown population)
+  try {
+    const dbg = document.createElement('div')
+    dbg.id = 'debug-status'
+    dbg.style.position = 'fixed'
+    dbg.style.right = '12px'
+    dbg.style.bottom = '12px'
+    dbg.style.padding = '8px 10px'
+    dbg.style.background = 'rgba(0,0,0,0.6)'
+    dbg.style.color = '#fff'
+    dbg.style.fontSize = '12px'
+    dbg.style.borderRadius = '8px'
+    dbg.style.zIndex = 9999
+    dbg.style.cursor = 'pointer'
+    dbg.title = 'Click to dump debug info to console'
+    dbg.addEventListener('click', ()=>{
+      console.log('GAMES_DATA', window.GAMES_DATA)
+      console.log('home select', document.getElementById('game'))
+      console.log('platform select', document.getElementById('platform'))
+      alert('Debug info printed to console')
+    })
+    document.body.appendChild(dbg)
+    function _refreshDbg(){
+      const gd = (window.GAMES_DATA && window.GAMES_DATA.games) ? window.GAMES_DATA.games.length : 0
+      const gameEl = document.getElementById('game')
+      const optCount = gameEl ? gameEl.options.length : 0
+      const platEl = document.getElementById('platform')
+      const platCount = platEl ? platEl.options.length : 0
+      dbg.textContent = `Games:${gd} • HomeOptions:${optCount} • Platforms:${platCount}`
+    }
+    setInterval(_refreshDbg, 1000)
+    _refreshDbg()
+  } catch (e){ console.warn('debug panel failed', e) }
+
+});
 

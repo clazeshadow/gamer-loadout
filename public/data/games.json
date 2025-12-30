@@ -52,6 +52,39 @@
     { "id":"pal-world","name":"Palworld","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced"],"recommendedLoadout":{"primary":"Weapon-specific","secondary":"N/A","attachments":[],"perks":["Taming"]}} ] },
     { "id":"tony-hawks","name":"Tony Hawk (Multiplayer)","platforms":[{"platform":"PC/Console","bestSettings":["Input: Controller recommended"],"recommendedLoadout":{"primary":"Skater setup","secondary":"N/A","attachments":[],"perks":["Trick timing"]}} ] },
     { "id":"warhammer-vermintide","name":"Vermintide 2","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced"],"recommendedLoadout":{"primary":"Class-specific","secondary":"N/A","attachments":[],"perks":["Team synergy"]}} ] },
-    { "id":"mh-rise","name":"Monster Hunter Rise","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced"],"recommendedLoadout":{"primary":"Weapon-specific","secondary":"N/A","attachments":[],"perks":["Elemental optimization"]}} ] }
+    { "id":"mh-rise","name":"Monster Hunter Rise","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced"],"recommendedLoadout":{"primary":"Weapon-specific","secondary":"N/A","attachments":[],"perks":["Elemental optimization"]}} ] },
+    { "id":"among-us","name":"Among Us","platforms":[
+      { "platform":"PC","bestSettings":["Matchmaking: Quick","Crossplay: On"], "recommendedLoadout": { "primary":"Crewmate role","secondary":"—","attachments":[], "perks":["Task Familiarity"] } },
+      { "platform":"PlayStation","bestSettings":["Crossplay: On"], "recommendedLoadout": { "primary":"Crewmate role","secondary":"—","attachments":[], "perks":["Impostor Detection"] } },
+      { "platform":"Xbox","bestSettings":["Crossplay: On"], "recommendedLoadout": { "primary":"Crewmate role","secondary":"—","attachments":[], "perks":["Quick Tasks"] } },
+      { "platform":"Switch","bestSettings":["Crossplay: On"], "recommendedLoadout": { "primary":"Crewmate role","secondary":"—","attachments":[], "perks":["Map Awareness"] } }
+    ] },
+    { "id":"dead-by-daylight","name":"Dead by Daylight","platforms":[
+      { "platform":"PC","bestSettings":["Graphics: Balanced","VSync: Off"], "recommendedLoadout": { "primary":"Survivor loadout","secondary":"—","attachments":[], "perks":["Self-Care","Borrowed Time"] } },
+      { "platform":"PlayStation","bestSettings":["Controller: Invert Y off"], "recommendedLoadout": { "primary":"Survivor loadout","secondary":"—","attachments":[], "perks":["Sprint Burst"] } },
+      { "platform":"Xbox","bestSettings":["Controller: Sensitivity medium"], "recommendedLoadout": { "primary":"Survivor loadout","secondary":"—","attachments":[], "perks":["Decisive Strike"] } },
+      { "platform":"Switch","bestSettings":["Graphics: Performance"], "recommendedLoadout": { "primary":"Survivor loadout","secondary":"—","attachments":[], "perks":["Camper Awareness"] } }
+    ] },
+    { "id":"division-2","name":"The Division 2","platforms":[
+      { "platform":"PC","bestSettings":["Graphics: High","FPS Cap: 144"], "recommendedLoadout": { "primary":"Assault Rifle","secondary":"SMG","attachments":["Suppressor"], "perks":["Skill Haste"] } },
+      { "platform":"PlayStation","bestSettings":["Controller: Aim Assist On"], "recommendedLoadout": { "primary":"Assault Rifle","secondary":"SMG","attachments":[], "perks":["Survivability"] } },
+      { "platform":"Xbox","bestSettings":["Controller: Aim Assist On"], "recommendedLoadout": { "primary":"Assault Rifle","secondary":"SMG","attachments":[], "perks":["Stability"] } }
+    ] },
+    { "id":"splitgate","name":"Splitgate","platforms":[
+      { "platform":"PC","bestSettings":["FPS: 144+","FOV: 100"], "recommendedLoadout": { "primary":"Assault","secondary":"Pistol","attachments":[], "perks":["Portal Mastery"] } },
+      { "platform":"PlayStation","bestSettings":["Controller: Sensitivity Low"], "recommendedLoadout": { "primary":"Assault","secondary":"Pistol","attachments":[], "perks":["Portal Mastery"] } },
+      { "platform":"Xbox","bestSettings":["Controller: Sensitivity Low"], "recommendedLoadout": { "primary":"Assault","secondary":"Pistol","attachments":[], "perks":["Portal Mastery"] } }
+    ] },
+    { "id":"brawlhalla","name":"Brawlhalla","platforms":[
+      { "platform":"PC","bestSettings":["Input: Controller/KB&M"], "recommendedLoadout": { "primary":"Legend-specific","secondary":"—","attachments":[], "perks":["Edge Guarding"] } },
+      { "platform":"PlayStation","bestSettings":["Controller recommended"], "recommendedLoadout": { "primary":"Legend-specific","secondary":"—","attachments":[], "perks":["Spacing"] } },
+      { "platform":"Xbox","bestSettings":["Controller recommended"], "recommendedLoadout": { "primary":"Legend-specific","secondary":"—","attachments":[], "perks":["Stage Control"] } },
+      { "platform":"Switch","bestSettings":["Controller recommended"], "recommendedLoadout": { "primary":"Legend-specific","secondary":"—","attachments":[], "perks":["Movement"] } }
+    ] },
+    { "id":"forza-horizon-5","name":"Forza Horizon 5","platforms":[
+      { "platform":"PC","bestSettings":["Graphics: High","Controller recommended"], "recommendedLoadout": { "primary":"Car tuning","secondary":"—","attachments":[], "perks":["Handling"] } },
+      { "platform":"Xbox","bestSettings":["Controller recommended","High framerate"], "recommendedLoadout": { "primary":"Car tuning","secondary":"—","attachments":[], "perks":["Cornering"] } }
+    ] }
   ]
 }
+

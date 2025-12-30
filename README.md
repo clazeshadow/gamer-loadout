@@ -96,6 +96,29 @@ export default App
 - Auth, DB, AI, payments
 
 Do not edit the other folder without coordination.
+
+## Deploying to Vercel
+
+This repo includes a `vercel.json` configured to serve the `public/` folder as a static site. Two recommended deployment methods:
+
+- Vercel web (recommended):
+  1. Go to https://vercel.com and sign in.
+ 2. Import the GitHub repository `clazeshadow/gamer-loadout`.
+ 3. Select the `main` branch and deploy. Vercel will detect the `vercel.json` and publish the static `public/` folder.
+
+- Vercel CLI:
+  1. Install the CLI: `npm i -g vercel` or use `npx vercel`.
+ 2. From the repository root run:
+
+```bash
+npx vercel --prod
+```
+
+  3. Follow the interactive prompts to link or create a Vercel project. The CLI will publish the `public/` folder.
+
+Notes:
+- The project contains an Express server (`app.js`) used for local testing. The static Vercel deployment serves `public/` directly; if you need server endpoints on Vercel you'll need to convert them to serverless functions.
+- After deployment Vercel will provide a shareable URL like `https://<project>.vercel.app`.
 import { useState } from "react"
 
 type Loadout = {
