@@ -1,15 +1,65 @@
-:root{--bg:#0f1724;--panel:#0b1220;--accent:#7c3aed;--muted:#93a4b8}
+:root{--bg:#0f1724;--panel:#0b1220;--accent:#35d054;--muted:#93a4b8}
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; background:linear-gradient(180deg,var(--bg),#071025);color:#e6eef8}
 .container{max-width:900px;margin:48px auto;padding:24px}
-h1{margin:0 0 18px;font-size:28px}
-.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.container{max-width:900px;margin:48px auto;padding:24px}
+
+/* Header */
+.site-header{background:linear-gradient(90deg, rgba(7,18,36,0.9), rgba(5,10,20,0.95));border-bottom:1px solid rgba(255,255,255,0.03)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 20px}
+.logo{font-size:18px;margin:0;display:flex;flex-direction:column}
+.logo .tag{font-size:11px;color:var(--muted);margin-top:2px}
+.nav a{color:var(--muted);margin-left:14px;text-decoration:none;padding:8px 6px;border-radius:6px}
+.nav a:hover{color:var(--accent);background:rgba(255,255,255,0.02)}
+
+/* Logo image */
+#site-logo{height:44px;width:auto;border-radius:6px;background:rgba(255,255,255,0.02);padding:4px;box-shadow:0 4px 14px rgba(0,0,0,0.6)}
+
+/* Pages */
+.page{display:none;padding:18px 0}
+.page-active{display:block}
+.lead{color:var(--muted);margin-top:6px}
+.panel{background:rgba(255,255,255,0.02);padding:16px;border-radius:12px;margin-top:12px}
+
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 label{display:flex;flex-direction:column;font-size:13px;color:var(--muted)}
 select{margin-top:6px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:var(--panel);color:inherit}
-button{background:var(--accent);border:none;color:white;padding:10px 14px;border-radius:10px;cursor:pointer}
-.result{background:rgba(255,255,255,0.02);padding:16px;border-radius:10px}
+button{background:var(--accent);border:none;color:white;padding:10px 14px;border-radius:10px;cursor:pointer;box-shadow:0 6px 18px rgba(53,208,84,0.08)}
+.controls button{min-width:160px}
+
+.game-card:hover{transform:translateY(-4px);transition:transform .18s ease}
+.card, .game-card{transition:box-shadow .18s ease, transform .18s ease}
+.card{box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+
+.result{background:rgba(255,255,255,0.02);padding:16px;border-radius:10px;margin-top:12px}
 .hint{color:var(--muted)}
 .loadout{display:flex;gap:16px;flex-wrap:wrap}
 .card{background:#071428;padding:12px;border-radius:8px;min-width:200px}
 .card h3{margin:0 0 8px}
 .list{margin:0;padding-left:18px}
+.badge{background:var(--accent);color:white;padding:3px 8px;border-radius:999px;font-size:12px;margin-left:8px}
+
+/* Plans */
+.plans{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.plan{min-width:200px}
+.muted{color:var(--muted)}
+
+/* Forms */
+form label{display:block;margin-bottom:8px}
+input,textarea{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+
+@media (max-width:640px){
+	.plans{flex-direction:column}
+	.header-inner{padding:12px}
+}
+
+/* Games list */
+.game-card{background:#071428;padding:14px;border-radius:10px;min-width:220px;cursor:pointer}
+.game-card h4{margin:0 0 8px}
+.game-card p{margin:0;color:var(--muted);font-size:13px}
+.game-detail h3{margin-top:0}
+.game-detail .setting{margin-bottom:6px}
+
+/* Tighter container for header to reduce visual clutter */
+.site-header .container{max-width:1100px;padding:0}
+
