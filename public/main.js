@@ -151,37 +151,135 @@ async function initGames(){
     h.textContent = g.name
     wrap.appendChild(h)
 
+    // platform selector
+    const platformWrapper = document.createElement('div')
+    platformWrapper.style.marginBottom = '8px'
+    const pfLabel = document.createElement('label')
+    pfLabel.textContent = 'Platform'
+    pfLabel.style.display = 'block'
+    const pfSelect = document.createElement('select')
+    pfSelect.style.marginTop = '6px'
+    (g.platforms || []).forEach(p => {
+      const o = document.createElement('option')
+      o.value = p.platform
+      o.textContent = p.platform
+      pfSelect.appendChild(o)
+    })
+    platformWrapper.appendChild(pfLabel)
+    platformWrapper.appendChild(pfSelect)
+    wrap.appendChild(platformWrapper)
+
     const settingsTitle = document.createElement('h4')
     settingsTitle.textContent = 'Recommended Settings'
     wrap.appendChild(settingsTitle)
-    const ul = document.createElement('ul')
-    g.bestSettings.forEach(s => { const li = document.createElement('li'); li.className='setting'; li.textContent = s; ul.appendChild(li) })
-    wrap.appendChild(ul)
+    const settingsContainer = document.createElement('div')
+    settingsContainer.className = 'settings'
+    wrap.appendChild(settingsContainer)
 
     const loadTitle = document.createElement('h4')
     loadTitle.textContent = 'Recommended Loadout'
     wrap.appendChild(loadTitle)
     const rl = document.createElement('div')
-    rl.innerHTML = `<p><strong>Primary:</strong> ${g.recommendedLoadout.primary || '—'}</p>
-                    <p><strong>Secondary:</strong> ${g.recommendedLoadout.secondary || '—'}</p>`
-    if (g.recommendedLoadout.attachments && g.recommendedLoadout.attachments.length){
-      const at = document.createElement('p')
-      at.innerHTML = '<strong>Attachments:</strong> ' + g.recommendedLoadout.attachments.join(', ')
-      rl.appendChild(at)
-    }
-    if (g.recommendedLoadout.perks && g.recommendedLoadout.perks.length){
-      const pk = document.createElement('p')
-      pk.innerHTML = '<strong>Perks:</strong> ' + g.recommendedLoadout.perks.join(', ')
-      rl.appendChild(pk)
-    }
+    rl.className = 'recommended-loadout'
     wrap.appendChild(rl)
+
+    const actions = document.createElement('div')
+    actions.style.marginTop = '10px'
+    const loadBtn = document.createElement('button')
+    loadBtn.textContent = 'Load into Generator'
+    loadBtn.className = 'load-into'
+    actions.appendChild(loadBtn)
+    wrap.appendChild(actions)
+
+    function renderPlatform(pf){
+      settingsContainer.innerHTML = ''
+      (pf.bestSettings || []).forEach(s => {
+        const div = document.createElement('div')
+        div.className = 'setting'
+        div.textContent = s
+        settingsContainer.appendChild(div)
+      })
+
+      rl.innerHTML = ''
+      const primary = document.createElement('p')
+      primary.innerHTML = `<strong>Primary:</strong> ${pf.recommendedLoadout.primary || '—'}`
+      rl.appendChild(primary)
+      const secondary = document.createElement('p')
+      secondary.innerHTML = `<strong>Secondary:</strong> ${pf.recommendedLoadout.secondary || '—'}`
+      rl.appendChild(secondary)
+      if (pf.recommendedLoadout.attachments && pf.recommendedLoadout.attachments.length){
+        const at = document.createElement('p')
+        at.innerHTML = '<strong>Attachments:</strong> ' + pf.recommendedLoadout.attachments.join(', ')
+        rl.appendChild(at)
+      }
+      if (pf.recommendedLoadout.perks && pf.recommendedLoadout.perks.length){
+        const pk = document.createElement('p')
+        pk.innerHTML = '<strong>Perks:</strong> ' + pf.recommendedLoadout.perks.join(', ')
+        rl.appendChild(pk)
+      }
+    }
+
+    pfSelect.addEventListener('change', ()=>{
+      const sel = pfSelect.value
+      const pf = (g.platforms || []).find(x=>x.platform===sel)
+      if (pf) renderPlatform(pf)
+    })
+
+    loadBtn.addEventListener('click', ()=>{
+      const sel = pfSelect.value
+      loadIntoGenerator(g.id, sel)
+    })
+
+    const initial = (g.platforms || [])[0]
+    if (initial){
+      renderPlatform(initial)
+    }
 
     detailEl.appendChild(wrap)
     detailEl.scrollIntoView({behavior:'smooth'})
   }
 
+  function populateHomeGames(){
+    const homeSelect = document.getElementById('game')
+    if (!homeSelect) return
+    homeSelect.innerHTML = ''
+    data.games.forEach(g => {
+      const opt = document.createElement('option')
+      opt.value = g.id
+      opt.textContent = g.name
+      homeSelect.appendChild(opt)
+    })
+  }
+
   search.addEventListener('input', (e)=> renderList(e.target.value))
   renderList()
+  populateHomeGames()
+}
+
+// Load a game's platform-specific loadout into the Home generator
+function loadIntoGenerator(gameId, platform){
+  fetch('/data/games.json').then(r=>r.json()).then(d=>{
+    const g = d.games.find(x=>x.id===gameId)
+    if (!g) return
+    const pf = (g.platforms||[]).find(p=>p.platform===platform) || (g.platforms||[])[0]
+    const homeSelect = document.getElementById('game')
+    if (homeSelect){ homeSelect.value = g.id }
+    const playSelect = document.getElementById('playstyle')
+    if (playSelect) playSelect.value = 'balanced'
+
+    const data = {
+      weapon: pf.recommendedLoadout.primary || 'Recommended Primary',
+      attachments: pf.recommendedLoadout.attachments || [],
+      perks: pf.recommendedLoadout.perks || [],
+      source: 'preset'
+    }
+    showPage('home')
+    renderLoadout(data)
+  })
+}
+
+search.addEventListener('input', (e)=> renderList(e.target.value))
+renderList()
 }
 
 // Contact page removed — no handlers
