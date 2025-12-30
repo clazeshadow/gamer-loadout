@@ -1,0 +1,117 @@
+{
+  "games": [
+    {
+      "id": "battlefield-6",
+      "name": "Battlefield 6",
+      "bestSettings": [
+        "Frame rate priority: High (unlocked FPS)",
+        "Field of View: 90-100",
+        "Mouse sensitivity: Low-medium, adjust per DPI",
+        "Graphics: Balanced for stable 60+ FPS",
+        "Aim assist: Off (PC)"
+      ],
+      "recommendedLoadout": {
+        "primary": "Assault rifle with compensator and angled grip",
+        "secondary": "Light machine gun for suppression",
+        "attachments": ["Hydraulic Recoil Compensator", "Angled Grip", "Extended Mag"],
+        "perks": ["Fast Hands", "Steady Aim"]
+      }
+    },
+    {
+      "id": "fortnite",
+      "name": "Fortnite",
+      "bestSettings": [
+        "Frame rate: Unlocked, target 120+ if possible",
+        "Graphics preset: Performance",
+        "Mouse sensitivity: Low for accuracy",
+        "Edit sensitivity multiplier: 1.0-1.2",
+        "Build editing: Enable confirm on release"
+      ],
+      "recommendedLoadout": {
+        "primary": "Assault Rifle (AR) with accurate scope",
+        "secondary": "Shotgun for close range",
+        "attachments": ["Accurate Optic", "Lightweight Stock"],
+        "perks": ["Fast Reload", "Mobility"]
+      }
+    },
+    {
+      "id": "gta-v",
+      "name": "GTA V",
+      "bestSettings": [
+        "Graphics: High for cinematic, disable motion blur",
+        "Aim sensitivity: Medium",
+        "Vehicle camera: Stable",
+        "Controller aim assist: On (console)"
+      ],
+      "recommendedLoadout": {
+        "primary": "Assault Rifle for missions",
+        "secondary": "SMG for close quarters",
+        "attachments": ["Suppressor", "Extended Clip"],
+        "perks": ["Armor", "Speed"]
+      }
+    },
+    {
+      "id": "ready-or-not",
+      "name": "Ready or Not",
+      "bestSettings": [
+        "Audio: High (footsteps clarity)",
+        "Mouse sensitivity: Low",
+        "Graphics: Balanced for clear visibility",
+        "Crosshair: Thinner for precision"
+      ],
+      "recommendedLoadout": {
+        "primary": "Breacher shotgun or carbine",
+        "secondary": "Pistol for backup",
+        "attachments": ["Suppressor", "Tactical Light"],
+        "perks": ["Breach Specialist", "Steady Aim"]
+      }
+    },
+    {
+      "id": "cs2",
+      "name": "CS2 (Counter-Strike 2)",
+      "bestSettings": [
+        "Resolution: Native, stretched if preferred",
+        "Mouse sensitivity: Very low for accurate flicks",
+        "FOV/Aspect: Default", 
+        "Graphics: Low for max FPS"
+      ],
+      "recommendedLoadout": {
+        "primary": "AK-47 (T) or M4A1-S (CT)",
+        "secondary": "Desert Eagle",
+        "attachments": [],
+        "perks": ["Grenade practice", "Recoil control"]
+      }
+    },
+    {
+      "id": "rainbow-six-siege",
+      "name": "Rainbow Six Siege",
+      "bestSettings": [
+        "Frame rate: Target 60+",
+        "Graphics: Medium for clarity",
+        "ADS sensitivity: Lower than hip sensitivity",
+        "Audio: High for callouts"
+      ],
+      "recommendedLoadout": {
+        "primary": "Assault rifle or SMG depending on operator",
+        "secondary": "Handgun with fast draw",
+        "attachments": ["Compensator", "Vertical Grip"],
+        "perks": ["Gadget mastery", "Map knowledge"]
+      }
+    },
+    {
+      "id": "marvel-rivals",
+      "name": "Marvel Rivals",
+      "bestSettings": [
+        "Graphics: Balanced",
+        "Input: Controller recommended",
+        "Target FPS: 60+"
+      ],
+      "recommendedLoadout": {
+        "primary": "Character-specific loadout (ability-focused)",
+        "secondary": "N/A",
+        "attachments": [],
+        "perks": ["Ability cooldown reduction", "Mobility"]
+      }
+    }
+  ]
+}

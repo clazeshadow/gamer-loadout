@@ -109,6 +109,81 @@ function initSubscribe(){
   })
 }
 
+// Games page
+async function initGames(){
+  const listEl = document.getElementById('games-list')
+  const detailEl = document.getElementById('game-detail')
+  const search = document.getElementById('game-search')
+  if (!listEl || !detailEl || !search) return
+
+  let data = { games: [] }
+  try {
+    const res = await fetch('/data/games.json')
+    data = await res.json()
+  } catch (e) {
+    listEl.innerHTML = '<div class="muted">Failed to load games data.</div>'
+    return
+  }
+
+  function renderList(filter=''){
+    listEl.innerHTML = ''
+    const items = data.games.filter(g => g.name.toLowerCase().includes(filter.toLowerCase()))
+    items.forEach(g => {
+      const card = document.createElement('div')
+      card.className = 'game-card'
+      const title = document.createElement('h4')
+      title.textContent = g.name
+      const desc = document.createElement('p')
+      desc.textContent = g.recommendedLoadout.primary || ''
+      card.appendChild(title)
+      card.appendChild(desc)
+      card.addEventListener('click', ()=> showDetail(g))
+      listEl.appendChild(card)
+    })
+    if (items.length === 0) listEl.innerHTML = '<div class="muted">No games found.</div>'
+  }
+
+  function showDetail(g){
+    detailEl.innerHTML = ''
+    const wrap = document.createElement('div')
+    wrap.className = 'game-detail'
+    const h = document.createElement('h3')
+    h.textContent = g.name
+    wrap.appendChild(h)
+
+    const settingsTitle = document.createElement('h4')
+    settingsTitle.textContent = 'Recommended Settings'
+    wrap.appendChild(settingsTitle)
+    const ul = document.createElement('ul')
+    g.bestSettings.forEach(s => { const li = document.createElement('li'); li.className='setting'; li.textContent = s; ul.appendChild(li) })
+    wrap.appendChild(ul)
+
+    const loadTitle = document.createElement('h4')
+    loadTitle.textContent = 'Recommended Loadout'
+    wrap.appendChild(loadTitle)
+    const rl = document.createElement('div')
+    rl.innerHTML = `<p><strong>Primary:</strong> ${g.recommendedLoadout.primary || '—'}</p>
+                    <p><strong>Secondary:</strong> ${g.recommendedLoadout.secondary || '—'}</p>`
+    if (g.recommendedLoadout.attachments && g.recommendedLoadout.attachments.length){
+      const at = document.createElement('p')
+      at.innerHTML = '<strong>Attachments:</strong> ' + g.recommendedLoadout.attachments.join(', ')
+      rl.appendChild(at)
+    }
+    if (g.recommendedLoadout.perks && g.recommendedLoadout.perks.length){
+      const pk = document.createElement('p')
+      pk.innerHTML = '<strong>Perks:</strong> ' + g.recommendedLoadout.perks.join(', ')
+      rl.appendChild(pk)
+    }
+    wrap.appendChild(rl)
+
+    detailEl.appendChild(wrap)
+    detailEl.scrollIntoView({behavior:'smooth'})
+  }
+
+  search.addEventListener('input', (e)=> renderList(e.target.value))
+  renderList()
+}
+
 // Contact page removed — no handlers
 
 // Init on load
@@ -118,5 +193,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
   showPage(start)
   initHome()
   initSubscribe()
-})
+  initGames()
 

@@ -2,16 +2,52 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; background:linear-gradient(180deg,var(--bg),#071025);color:#e6eef8}
 .container{max-width:900px;margin:48px auto;padding:24px}
-h1{margin:0 0 18px;font-size:28px}
-.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.container{max-width:900px;margin:48px auto;padding:24px}
+
+/* Header */
+.site-header{background:linear-gradient(90deg, rgba(7,18,36,0.9), rgba(5,10,20,0.95));border-bottom:1px solid rgba(255,255,255,0.03)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+.logo{font-size:18px;margin:0}
+.nav a{color:var(--muted);margin-left:14px;text-decoration:none}
+.nav a:hover{color:var(--accent)}
+
+/* Pages */
+.page{display:none;padding:18px 0}
+.page-active{display:block}
+.lead{color:var(--muted);margin-top:6px}
+.panel{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px;margin-top:12px}
+
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 label{display:flex;flex-direction:column;font-size:13px;color:var(--muted)}
 select{margin-top:6px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:var(--panel);color:inherit}
 button{background:var(--accent);border:none;color:white;padding:10px 14px;border-radius:10px;cursor:pointer}
-.result{background:rgba(255,255,255,0.02);padding:16px;border-radius:10px}
+
+.result{background:rgba(255,255,255,0.02);padding:16px;border-radius:10px;margin-top:12px}
 .hint{color:var(--muted)}
 .loadout{display:flex;gap:16px;flex-wrap:wrap}
 .card{background:#071428;padding:12px;border-radius:8px;min-width:200px}
 .card h3{margin:0 0 8px}
 .list{margin:0;padding-left:18px}
 .badge{background:var(--accent);color:white;padding:3px 8px;border-radius:999px;font-size:12px;margin-left:8px}
+
+/* Plans */
+.plans{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.plan{min-width:200px}
+.muted{color:var(--muted)}
+
+/* Forms */
+form label{display:block;margin-bottom:8px}
+input,textarea{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+
+@media (max-width:640px){
+	.plans{flex-direction:column}
+	.header-inner{padding:12px}
+}
+
+/* Games list */
+.game-card{background:#071428;padding:12px;border-radius:8px;min-width:220px;cursor:pointer}
+.game-card h4{margin:0 0 8px}
+.game-card p{margin:0;color:var(--muted);font-size:13px}
+.game-detail h3{margin-top:0}
+.game-detail .setting{margin-bottom:6px}
 
