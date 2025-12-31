@@ -86,31 +86,7 @@ function updateHistoryViewer(){
     list.appendChild(card)
   })
 }
-// Restore history on load
-document.addEventListener('DOMContentLoaded', ()=>{
-   window.LOADOUT_HISTORY = JSON.parse(localStorage.getItem('loadout_history') || '[]')
-   updateHistoryViewer()
-})
-// Account sign-in (demo only, no backend)
-document.addEventListener('DOMContentLoaded', ()=>{
-  const form = document.getElementById('signin-form')
-  const status = document.getElementById('signin-status')
-  if (form) {
-    form.addEventListener('submit', e => {
-      e.preventDefault()
-      const email = document.getElementById('signin-email').value
-      const pw = document.getElementById('signin-password').value
-      if (email && pw) {
-        status.textContent = 'Signed in as ' + email + ' (demo only)'
-        form.reset()
-      } else {
-        status.textContent = 'Please enter email and password.'
-      }
-    })
-  }
-})
-}
-}
+// History and sign-in will be initialized after DOMContentLoaded at the bottom
 
 // Navigation
 function showPage(id){
@@ -449,6 +425,30 @@ function updateHomePlatforms(gameId){
   if (platformSelect.options.length) platformSelect.selectedIndex = 0
 }
 
+// Populate games and platforms globally
+function populateGames(){
+  const gameSelect = document.getElementById('game')
+  if (!gameSelect || !window.GAMES_DATA || !window.GAMES_DATA.games) return
+  gameSelect.innerHTML = ''
+  const ph = document.createElement('option')
+  ph.value = ''
+  ph.textContent = 'Choose a game...'
+  ph.disabled = true
+  ph.selected = true
+  gameSelect.appendChild(ph)
+  window.GAMES_DATA.games.forEach(g => {
+    const opt = document.createElement('option')
+    opt.value = g.id
+    opt.textContent = g.name
+    gameSelect.appendChild(opt)
+  })
+  if (gameSelect.options.length > 1){
+    gameSelect.selectedIndex = 1
+    updateHomePlatforms(gameSelect.value)
+  }
+}
+
+
 // Load a game's platform-specific loadout into the Home generator
 function loadIntoGenerator(gameId, platform){
   fetch('/data/games.json').then(r=>r.json()).then(d=>{
@@ -509,22 +509,29 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   }
   if (window.attachHomeChange) window.attachHomeChange()
 
+  // Restore history and sign-in after DOM ready
+  window.LOADOUT_HISTORY = JSON.parse(localStorage.getItem('loadout_history') || '[]');
+  updateHistoryViewer();
+  const form = document.getElementById('signin-form');
+  const status = document.getElementById('signin-status');
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('signin-email').value;
+      const pw = document.getElementById('signin-password').value;
+      if (email && pw) {
+        status.textContent = 'Signed in as ' + email + ' (demo only)';
+        form.reset();
+      } else {
+        status.textContent = 'Please enter email and password.';
+      }
+    });
+  }
+
   // Initial population after data load
   if (window.GAMES_DATA && window.GAMES_DATA.games) populateGames();
   initHome();
   initSubscribe();
-  // games already initialized by initGames
-  // Remove debug panel code
-
-
-  // ensure platform select is set for current game
-  const gs = document.getElementById('game')
-  if (gs && gs.value) updateHomePlatforms(gs.value)
-
-  initHome()
-  initSubscribe()
-  // games already initialized by initGames
-  // Debug panel removed as per request
 
 });
 
