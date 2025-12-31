@@ -277,9 +277,36 @@ function initSettingsGenerator(){
     const game = dataSrc.games.find(g => g.id === gameId)
     if (!game) return
 
-    const pf = (game.platforms.find(p => (typeof p === 'string') ? p === platform : (p.platform === platform)) || game.platforms[0])
-    if (!pf || !pf.controlSettings) {
-      alert('No control settings available for this game')
+    // Find platform with fuzzy matching
+    let pf = game.platforms.find(p => {
+      const pname = (typeof p === 'string') ? p : (p.platform || '')
+      if (pname === platform) return true
+      
+      // Fuzzy match for normalized platform names
+      const plower = pname.toLowerCase()
+      const targetLower = platform.toLowerCase()
+      
+      if (targetLower === 'playstation' && plower.includes('playstation')) return true
+      if (targetLower === 'xbox' && plower.includes('xbox')) return true
+      if (targetLower === 'nintendo switch 2' && plower.includes('switch')) return true
+      if (targetLower === 'switch' && plower.includes('switch')) return true
+      if (targetLower === 'pc' && plower.includes('pc')) return true
+      if (plower.includes('console')) return true // Generic console matches any console platform
+      
+      return false
+    })
+    
+    // Fallback to first platform
+    if (!pf) pf = game.platforms[0]
+    
+    // Handle string platforms
+    if (typeof pf === 'string') {
+      alert('No control settings available for this platform')
+      return
+    }
+    
+    if (!pf.controlSettings) {
+      alert('No control settings available for this game/platform combination')
       return
     }
 
