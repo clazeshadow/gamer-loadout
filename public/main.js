@@ -66,6 +66,7 @@ function renderLoadout(data){
   stack.appendChild(wrapper)
   // Also update the history viewer
   updateHistoryViewer()
+}
 function updateHistoryViewer(){
   const viewer = document.getElementById('history-viewer')
   const list = document.getElementById('history-list')
@@ -508,18 +509,13 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   }
   if (window.attachHomeChange) window.attachHomeChange()
 
-  // Add debug panel for Chromebook users
-  function _refreshDbg(){
-    const gd = (window.GAMES_DATA && window.GAMES_DATA.games) ? window.GAMES_DATA.games.length : 0
-    const gameEl = document.getElementById('game')
-    const optCount = gameEl ? gameEl.options.length : 0
-    const platEl = document.getElementById('platform')
-    const platCount = platEl ? platEl.options.length : 0
-    const dbg = document.getElementById('debug-status')
-    if (dbg) dbg.textContent = `Games loaded: ${gd} | Game options: ${optCount} | Platforms: ${platCount}`
-  }
-  setInterval(_refreshDbg, 1000)
-  _refreshDbg()
+  // Initial population after data load
+  if (window.GAMES_DATA && window.GAMES_DATA.games) populateGames();
+  initHome();
+  initSubscribe();
+  // games already initialized by initGames
+  // Remove debug panel code
+
 
   // ensure platform select is set for current game
   const gs = document.getElementById('game')
@@ -528,39 +524,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   initHome()
   initSubscribe()
   // games already initialized by initGames
-  // debug status panel (helps verify dropdown population)
-  try {
-    const dbg = document.createElement('div')
-    dbg.id = 'debug-status'
-    dbg.style.position = 'fixed'
-    dbg.style.right = '12px'
-    dbg.style.bottom = '12px'
-    dbg.style.padding = '8px 10px'
-    dbg.style.background = 'rgba(0,0,0,0.6)'
-    dbg.style.color = '#fff'
-    dbg.style.fontSize = '12px'
-    dbg.style.borderRadius = '8px'
-    dbg.style.zIndex = 9999
-    dbg.style.cursor = 'pointer'
-    dbg.title = 'Click to dump debug info to console'
-    dbg.addEventListener('click', ()=>{
-      console.log('GAMES_DATA', window.GAMES_DATA)
-      console.log('home select', document.getElementById('game'))
-      console.log('platform select', document.getElementById('platform'))
-      alert('Debug info printed to console')
-    })
-    document.body.appendChild(dbg)
-    function _refreshDbg(){
-      const gd = (window.GAMES_DATA && window.GAMES_DATA.games) ? window.GAMES_DATA.games.length : 0
-      const gameEl = document.getElementById('game')
-      const optCount = gameEl ? gameEl.options.length : 0
-      const platEl = document.getElementById('platform')
-      const platCount = platEl ? platEl.options.length : 0
-      dbg.textContent = `Games:${gd} • HomeOptions:${optCount} • Platforms:${platCount}`
-    }
-    setInterval(_refreshDbg, 1000)
-    _refreshDbg()
-  } catch (e){ console.warn('debug panel failed', e) }
+  // Debug panel removed as per request
 
 });
 
