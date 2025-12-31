@@ -326,6 +326,7 @@ async function initGames(){
         const ctrlTitle = document.createElement('h4')
         ctrlTitle.textContent = 'Control Settings'
         ctrlTitle.style.marginTop = '16px'
+        ctrlTitle.style.marginBottom = '10px'
         settingsContainer.appendChild(ctrlTitle)
         
         const cs = pf.controlSettings
@@ -335,7 +336,12 @@ async function initGames(){
           const kbSection = document.createElement('div')
           kbSection.className = 'control-section'
           kbSection.style.marginBottom = '12px'
-          kbSection.innerHTML = '<strong style="color: var(--primary)">⌨️ Keyboard & Mouse</strong>'
+          const kbTitle = document.createElement('div')
+          kbTitle.style.fontWeight = 'bold'
+          kbTitle.style.color = 'var(--accent)'
+          kbTitle.style.marginBottom = '8px'
+          kbTitle.textContent = '⌨️ Keyboard & Mouse'
+          kbSection.appendChild(kbTitle)
           
           if (cs.mouseSensitivity) {
             const div = document.createElement('div')
@@ -362,6 +368,7 @@ async function initGames(){
             const list = document.createElement('ul')
             list.style.fontSize = '13px'
             list.style.marginTop = '4px'
+            list.style.marginBottom = '0'
             Object.entries(cs.keybinds).slice(0, 5).forEach(([key, val]) => {
               const li = document.createElement('li')
               li.textContent = `${key}: ${val}`
@@ -384,7 +391,12 @@ async function initGames(){
           const ctrlSection = document.createElement('div')
           ctrlSection.className = 'control-section'
           ctrlSection.style.marginBottom = '12px'
-          ctrlSection.innerHTML = '<strong style="color: var(--primary)">🎮 Controller</strong>'
+          const ctrlTitle = document.createElement('div')
+          ctrlTitle.style.fontWeight = 'bold'
+          ctrlTitle.style.color = 'var(--accent)'
+          ctrlTitle.style.marginBottom = '8px'
+          ctrlTitle.textContent = '🎮 Controller'
+          ctrlSection.appendChild(ctrlTitle)
           
           const ctrl = cs.controller
           if (ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity) {
@@ -418,7 +430,12 @@ async function initGames(){
         if ((inputType === 'all' || inputType === 'controller') && !cs.controller && (cs.lookSensitivityX || cs.horizontalSensitivity)) {
           const ctrlSection = document.createElement('div')
           ctrlSection.className = 'control-section'
-          ctrlSection.innerHTML = '<strong style="color: var(--primary)">🎮 Controller</strong>'
+          const ctrlTitle = document.createElement('div')
+          ctrlTitle.style.fontWeight = 'bold'
+          ctrlTitle.style.color = 'var(--accent)'
+          ctrlTitle.style.marginBottom = '8px'
+          ctrlTitle.textContent = '🎮 Controller'
+          ctrlSection.appendChild(ctrlTitle)
           
           if (cs.lookSensitivityX) {
             const div = document.createElement('div')
