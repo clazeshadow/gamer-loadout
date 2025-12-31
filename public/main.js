@@ -247,7 +247,8 @@ function initSettingsGenerator(){
       // Prefer ordering: PC, PlayStation, Xbox, Switch, Nintendo Switch 2
       const order = ['PC','PlayStation','Xbox','Switch','Nintendo Switch 2']
       const final = []
-      // Ensure Xbox and Nintendo Switch 2 are available as options
+      // Ensure all console platforms are available as options
+      if (!set.has('PlayStation')) set.add('PlayStation')
       if (!set.has('Xbox')) set.add('Xbox')
       if (!set.has('Nintendo Switch 2')) set.add('Nintendo Switch 2')
       order.forEach(k => { if (set.has(k)) final.push(k); set.delete(k) })
@@ -301,7 +302,13 @@ function initSettingsGenerator(){
     
     console.log('Matched platform:', pf)
     
-    // Fallback to first platform
+    // Fallback to first platform or try Console as generic fallback
+    if (!pf) {
+      pf = game.platforms.find(p => {
+        const pname = (typeof p === 'string') ? p : (p.platform || '')
+        return pname.toLowerCase().includes('console')
+      })
+    }
     if (!pf) pf = game.platforms[0]
     
     // Handle string platforms
