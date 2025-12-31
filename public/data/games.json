@@ -1,29 +1,104 @@
 {
   "games": [
     { "id": "fortnite", "name": "Fortnite", "platforms": [
-      { "platform": "PC", "bestSettings": ["Graphics: Performance","FPS: Unlocked, 120+","Mouse sensitivity: Low","Edit sensitivity multiplier:1.0-1.2"], "recommendedLoadout": { "primary":"Assault Rifle (AR)", "secondary":"Shotgun","attachments":["Accurate Optic"], "perks":["Fast Reload"] } },
-      { "platform": "PlayStation", "bestSettings": ["Aim Assist: On","Graphics: Performance"], "recommendedLoadout": { "primary":"Assault Rifle (AR)", "secondary":"Shotgun","attachments":[], "perks":["Mobility"] } }
+      { "platform": "PC", "bestSettings": ["Graphics: Performance","FPS: Unlocked, 120+","Mouse sensitivity: Low","Edit sensitivity multiplier:1.0-1.2"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Combat SMG", "secondary": "Auto Shotgun", "attachments": ["Laser Sight"], "perks": ["Sprint Reload", "Double Pump"] },
+          "balanced": { "primary": "MK7 Assault Rifle", "secondary": "Striker Pump Shotgun", "attachments": ["Red Dot Sight"], "perks": ["Fast Reload", "Quick Edit"] },
+          "defensive": { "primary": "Hunter Bolt-Action Sniper", "secondary": "Ranger Pistol", "attachments": ["4x Scope"], "perks": ["Cover Mastery", "Shield Boost"] }
+        }
+      } },
+      { "platform": "PlayStation", "bestSettings": ["Aim Assist: On","Graphics: Performance"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Stinger SMG", "secondary": "Drum Shotgun", "attachments": ["Laser Sight"], "perks": ["Sprint", "Auto Reload"] },
+          "balanced": { "primary": "Ranger Assault Rifle", "secondary": "Striker Pump Shotgun", "attachments": ["Grip Tape"], "perks": ["Mobility", "Quick Edit"] },
+          "defensive": { "primary": "MK7 Assault Rifle", "secondary": "Sidearm Pistol", "attachments": ["Suppressor"], "perks": ["Cover Mastery", "Shield Boost"] }
+        }
+      } },
+      { "platform": "Xbox", "bestSettings": ["Aim Assist: On","Graphics: Balanced"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Rapid Fire SMG", "secondary": "Auto Shotgun", "attachments": ["Laser Sight"], "perks": ["Sprint", "Quick Swap"] },
+          "balanced": { "primary": "MK7 Assault Rifle", "secondary": "Striker Pump Shotgun", "attachments": ["Red Dot Sight"], "perks": ["Mobility", "Fast Reload"] },
+          "defensive": { "primary": "Ranger Assault Rifle", "secondary": "Sidearm Pistol", "attachments": ["Suppressor"], "perks": ["Cover Mastery", "Shield Boost"] }
+        }
+      } }
     ] },
     { "id": "apex-legends", "name": "Apex Legends", "platforms": [
-      { "platform":"PC","bestSettings":["FPS: 144+","FOV: 90"], "recommendedLoadout":{"primary":"R-301","secondary":"Pistol","attachments":["Barrel Stabilizer"],"perks":["Mobility"]}},
-      { "platform":"Console","bestSettings":["FPS: 60","Controller Aim Assist: On"], "recommendedLoadout":{"primary":"R-301","secondary":"Pistol"}}
+      { "platform": "PC", "bestSettings": ["FPS: 144+","FOV: 90"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "CAR SMG", "secondary": "Wingman", "attachments": ["Laser Sight", "Barrel Stabilizer"], "perks": ["Stim Rush", "Quick Swap"] },
+          "balanced": { "primary": "R-301 Carbine", "secondary": "RE-45", "attachments": ["Barrel Stabilizer", "2x HCOG"], "perks": ["Mobility", "Fast Heal"] },
+          "defensive": { "primary": "G7 Scout", "secondary": "Mozambique", "attachments": ["3x Optic"], "perks": ["Cover Mastery", "Shield Regen"] }
+        }
+      } },
+      { "platform": "Console", "bestSettings": ["FPS: 60","Controller Aim Assist: On"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Volt SMG", "secondary": "Wingman", "attachments": ["Laser Sight"], "perks": ["Quick Swap", "Stim Rush"] },
+          "balanced": { "primary": "Flatline", "secondary": "RE-45", "attachments": ["Barrel Stabilizer"], "perks": ["Mobility", "Fast Heal"] },
+          "defensive": { "primary": "Longbow DMR", "secondary": "P2020", "attachments": ["4x Optic"], "perks": ["Cover Mastery", "Shield Regen"] }
+        }
+      } }
     ] },
     { "id": "call-of-duty-warzone", "name": "Call of Duty: Warzone", "platforms": [
-      { "platform":"PC","bestSettings":["FPS: Unlocked","FOV: 100"], "recommendedLoadout":{"primary":"M4A1","secondary":"MP5","attachments":["Red Dot","Foregrip","Extended Mag"],"perks":["Fast Hands"]}},
-      { "platform":"Console","bestSettings":["Aim Assist: On","Graphics: Balanced"], "recommendedLoadout":{"primary":"M4A1"}}
+      { "platform": "PC", "bestSettings": ["FPS: Unlocked", "FOV: 100"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Fennec 45", "secondary": "Kastov-74U", "attachments": ["VLK Optic", "Merc Foregrip", "60-Round Mag"], "perks": ["Double Time", "High Alert"] },
+          "balanced": { "primary": "TAQ-56", "secondary": "VEL 46", "attachments": ["SZ Holotherm", "Commando Foregrip"], "perks": ["Overkill", "Fast Hands"] },
+          "defensive": { "primary": "RPK", "secondary": "P890", "attachments": ["Aim OP-V4", "Lockgrip Precision"], "perks": ["Battle Hardened", "Bomb Squad"] }
+        }
+      } },
+      { "platform": "Console", "bestSettings": ["Aim Assist: On", "Graphics: Balanced"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Lachmann Sub", "secondary": "FSS Hurricane", "attachments": ["Laser", "50-Round Drum"], "perks": ["Double Time", "Resupply"] },
+          "balanced": { "primary": "M4", "secondary": "X13 Auto", "attachments": ["Red Dot", "Suppressor"], "perks": ["Overkill", "Fast Hands"] },
+          "defensive": { "primary": "RAAL MG", "secondary": "Basilisk", "attachments": ["Thermal Optic", "Heavy Stock"], "perks": ["Battle Hardened", "Bomb Squad"] }
+        }
+      } }
     ] },
     { "id":"cs2","name":"CS2 (Counter-Strike 2)", "platforms":[ {"platform":"PC","bestSettings":["Resolution: Native","Mouse sensitivity: Very low","Graphics: Low"],"recommendedLoadout":{"primary":"AK-47 / M4A1-S","secondary":"Desert Eagle","attachments":[],"perks":["Recoil Control"]}} ] },
     { "id":"valorant","name":"Valorant","platforms":[{"platform":"PC","bestSettings":["Resolution: Native","Mouse sensitivity: Low","Graphics: Low for FPS"],"recommendedLoadout":{"primary":"Vandal/Phantom","secondary":"Ghost","attachments":[],"perks":["Crosshair Practice"]}} ] },
-    { "id":"overwatch-2","name":"Overwatch 2","platforms":[{"platform":"PC","bestSettings":["Input: Controller/KB&M as preferred","Graphics: Balanced"],"recommendedLoadout":{"primary":"Hero-specific","secondary":"N/A","attachments":[],"perks":["Teamplay"]}} ] },
+    { "id": "overwatch-2", "name": "Overwatch 2", "platforms": [
+      { "platform": "PC", "bestSettings": ["Input: Controller/KB&M as preferred", "Graphics: Balanced"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Genji", "secondary": "Tracer", "attachments": ["Dash Reset"], "perks": ["Flank Mastery", "Ult Charge"] },
+          "balanced": { "primary": "Sojourn", "secondary": "Soldier: 76", "attachments": ["Railgun"], "perks": ["Mobility", "Consistent DPS"] },
+          "defensive": { "primary": "Sigma", "secondary": "Baptiste", "attachments": ["Barrier"], "perks": ["Area Denial", "Self Sustain"] }
+        }
+      } }
+    ] },
     { "id":"dota-2","name":"Dota 2","platforms":[{"platform":"PC","bestSettings":["Graphics: Balanced","Input: Mouse/Keyboard"],"recommendedLoadout":{"primary":"Hero-specific","secondary":"N/A","attachments":[],"perks":["Map awareness"]}} ] },
     { "id":"league-of-legends","name":"League of Legends","platforms":[{"platform":"PC","bestSettings":["Graphics: Low for FPS","Input: Mouse/Keyboard"],"recommendedLoadout":{"primary":"Champion-specific","secondary":"N/A","attachments":[],"perks":["Objective Control"]}} ] },
     { "id":"rocket-league","name":"Rocket League","platforms":[{"platform":"PC/Console","bestSettings":["FPS: 60+","Input: Controller recommended"],"recommendedLoadout":{"primary":"Car loadout","secondary":"N/A","attachments":[],"perks":["Aerial Control"]}} ] },
-    { "id":"rainbow-six-siege","name":"Rainbow Six Siege","platforms":[{"platform":"PC","bestSettings":["Frame rate: 60+","ADS sensitivity lower"],"recommendedLoadout":{"primary":"Operator-specific","secondary":"Handgun","attachments":["Compensator"],"perks":["Gadget mastery"]}} ] },
+    { "id": "rainbow-six-siege", "name": "Rainbow Six Siege", "platforms": [
+      { "platform": "PC", "bestSettings": ["Frame rate: 60+", "ADS sensitivity lower"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Ash", "secondary": "M45 MEUSOC", "attachments": ["Compensator", "ACOG"], "perks": ["Breaching Rounds", "Speed"] },
+          "balanced": { "primary": "Zofia", "secondary": "RG15", "attachments": ["Flash Hider", "2x Scope"], "perks": ["Versatility", "Gadget Utility"] },
+          "defensive": { "primary": "Smoke", "secondary": "SMG-11", "attachments": ["Suppressor", "1.5x Scope"], "perks": ["Area Denial", "Toxic Gas"] }
+        }
+      } }
+    ] },
     { "id":"pubg","name":"PUBG: Battlegrounds","platforms":[{"platform":"PC","bestSettings":["FPS: Stable 60+","FOV: High"],"recommendedLoadout":{"primary":"AR/DMR","secondary":"SMG","attachments":["Extended Mag"],"perks":["Positioning"]}} ] },
     { "id":"gta-online","name":"GTA V Online","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: High for PC","Controller Aim Assist: On for console"],"recommendedLoadout":{"primary":"Assault Rifle","secondary":"SMG","attachments":["Suppressor"],"perks":["Armor"]}} ] },
-    { "id":"battlefield-6","name":"Battlefield 6","platforms":[{"platform":"PC","bestSettings":["Frame rate priority: High","FOV: 90-100"],"recommendedLoadout":{"primary":"Assault Rifle","secondary":"LMG","attachments":["Compensator","Angled Grip"],"perks":["Fast Hands"]}} ] },
+    { "id": "battlefield-6", "name": "Battlefield 6", "platforms": [
+      { "platform": "PC", "bestSettings": ["Frame rate priority: High", "FOV: 90-100"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "K30 SMG", "secondary": "G57", "attachments": ["Extended Mag", "Laser Sight"], "perks": ["Fast Sprint", "Quick Reload"] },
+          "balanced": { "primary": "SFAR-M GL", "secondary": "M44", "attachments": ["Compensator", "2x Scope"], "perks": ["Versatility", "Gadget Utility"] },
+          "defensive": { "primary": "SVK DMR", "secondary": "MCS-880", "attachments": ["Suppressor", "4x Scope"], "perks": ["Area Control", "Extra Armor"] }
+        }
+      } }
+    ] },
     { "id":"ready-or-not","name":"Ready or Not","platforms":[{"platform":"PC","bestSettings":["Audio: High","Mouse sensitivity: Low"],"recommendedLoadout":{"primary":"Breacher Shotgun","secondary":"Pistol","attachments":["Tactical Light"],"perks":["Breach Specialist"]}} ] },
-    { "id":"marvel-rivals","name":"Marvel Rivals","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced","Input: Controller recommended"],"recommendedLoadout":{"primary":"Character-specific","secondary":"N/A","attachments":[],"perks":["Ability cooldown reduction"]}} ] },
+    { "id": "marvel-rivals", "name": "Marvel Rivals", "platforms": [
+      { "platform": "PC/Console", "bestSettings": ["Graphics: Balanced", "Input: Controller recommended"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Wolverine", "secondary": "Iron Man", "attachments": ["Claw Slash"], "perks": ["Burst Damage", "Mobility"] },
+          "balanced": { "primary": "Spider-Man", "secondary": "Storm", "attachments": ["Web Swing"], "perks": ["Versatility", "Crowd Control"] },
+          "defensive": { "primary": "Hulk", "secondary": "Doctor Strange", "attachments": ["Gamma Shield"], "perks": ["Tankiness", "Support"] }
+        }
+      } }
+    ] },
     { "id":"sea-of-thieves","name":"Sea of Thieves","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced","Audio: High for callouts"],"recommendedLoadout":{"primary":"Ship loadout","secondary":"N/A","attachments":[],"perks":["Crew Coordination"]}} ] },
     { "id":"fall-guys","name":"Fall Guys","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Low-Latency","Input: Controller optional"],"recommendedLoadout":{"primary":"N/A","secondary":"N/A","attachments":[],"perks":["Movement practice"]}} ] },
     { "id":"rust","name":"Rust","platforms":[{"platform":"PC","bestSettings":["Graphics: Balanced","Input: Mouse/Keyboard"],"recommendedLoadout":{"primary":"Bolt/Assault","secondary":"SMG","attachments":[],"perks":["Survival"]}} ] },
@@ -32,8 +107,24 @@
     { "id":"warframe","name":"Warframe","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced","Input: Controller supported"],"recommendedLoadout":{"primary":"Primary Weapon","secondary":"Sidearm","attachments":[],"perks":["Mod optimization"]}} ] },
     { "id":"monster-hunter-world","name":"Monster Hunter: World","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: High","Input: Controller recommended"],"recommendedLoadout":{"primary":"Weapon-specific","secondary":"N/A","attachments":[],"perks":["Elemental optimization"]}} ] },
     { "id":"halo-infinite","name":"Halo Infinite","platforms":[{"platform":"PC/Console","bestSettings":["FPS: 60+","Input: Controller recommended"],"recommendedLoadout":{"primary":"Battle Rifle/BR","secondary":"Sidekick","attachments":[],"perks":["Aim practice"]}} ] },
-    { "id":"smite","name":"Smite","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced","Input: Controller optional"],"recommendedLoadout":{"primary":"God-specific","secondary":"N/A","attachments":[],"perks":["Objective awareness"]}} ] },
-    { "id":"paladins","name":"Paladins","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced","Input: Controller optional"],"recommendedLoadout":{"primary":"Champion-specific","secondary":"N/A","attachments":[],"perks":["Ability timing"]}} ] },
+    { "id": "smite", "name": "Smite", "platforms": [
+      { "platform": "PC/Console", "bestSettings": ["Graphics: Balanced", "Input: Controller optional"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Susano", "secondary": "Set", "attachments": ["Blink Rune"], "perks": ["Burst Damage", "Mobility"] },
+          "balanced": { "primary": "Cthulhu", "secondary": "Yemoja", "attachments": ["Teleport Rune"], "perks": ["Teamfight", "Crowd Control"] },
+          "defensive": { "primary": "Geb", "secondary": "Khepri", "attachments": ["Shell Shield"], "perks": ["Peel", "Damage Mitigation"] }
+        }
+      } }
+    ] },
+    { "id": "paladins", "name": "Paladins", "platforms": [
+      { "platform": "PC/Console", "bestSettings": ["Graphics: Balanced", "Input: Controller optional"], "recommendedLoadout": {
+        "variants": {
+          "aggressive": { "primary": "Androxus", "secondary": "Vora", "attachments": ["Defiant Fist"], "perks": ["Burst Damage", "Mobility"] },
+          "balanced": { "primary": "Lian", "secondary": "Io", "attachments": ["Precision"], "perks": ["Versatility", "Team Utility"] },
+          "defensive": { "primary": "Terminus", "secondary": "Inara", "attachments": ["Fortress Breaker"], "perks": ["Tankiness", "Zone Control"] }
+        }
+      } }
+    ] },
     { "id":"for-honor","name":"For Honor","platforms":[{"platform":"PC/Console","bestSettings":["Input: Controller recommended","Graphics: Balanced"],"recommendedLoadout":{"primary":"Hero-specific","secondary":"N/A","attachments":[],"perks":["Parry timing"]}} ] },
     { "id":"battle-royale-royale","name":"Generic Battle Royale","platforms":[{"platform":"PC/Console","bestSettings":["FPS: High","Sensitivity: Low for accuracy"],"recommendedLoadout":{"primary":"AR/SMG","secondary":"Shotgun","attachments":[],"perks":["Survival skills"]}} ] },
     { "id":"terraria","name":"Terraria","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced"],"recommendedLoadout":{"primary":"Game-specific","secondary":"N/A","attachments":[],"perks":["Crafting knowledge"]}} ] },

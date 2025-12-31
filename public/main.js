@@ -20,23 +20,34 @@ function mockLoadout(game, playstyle) {
 
 function renderLoadout(data){
   const result = document.getElementById('result')
-  result.innerHTML = ''
+  // Remove hint if present, but never clear the stack except by explicit user action or navigation
+  const hint = result.querySelector('.hint')
+  if (hint) hint.remove()
+  // Create or find the loadout stack container
+  let stack = result.querySelector('.loadout-stack')
+  if (!stack) {
+    stack = document.createElement('div')
+    stack.className = 'loadout-stack'
+    result.appendChild(stack)
+  }
+  // Save to history
+  window.LOADOUT_HISTORY = window.LOADOUT_HISTORY || []
+  window.LOADOUT_HISTORY.push(data)
+  localStorage.setItem('loadout_history', JSON.stringify(window.LOADOUT_HISTORY))
+  // Create a new loadout card
   const wrapper = document.createElement('div')
   wrapper.className = 'loadout'
-
   const card = document.createElement('div')
   card.className = 'card'
   const title = document.createElement('h3')
   title.textContent = data.weapon
   card.appendChild(title)
-
   // source badge
   const badge = document.createElement('span')
   badge.className = 'badge'
   badge.textContent = data.source === 'ai' ? 'AI' : 'Preset'
   badge.style.float = 'right'
   title.appendChild(badge)
-
   const attTitle = document.createElement('div')
   attTitle.textContent = 'Attachments'
   const attList = document.createElement('ul')
@@ -44,7 +55,6 @@ function renderLoadout(data){
   data.attachments.forEach(a => { const li = document.createElement('li'); li.textContent = a; attList.appendChild(li) })
   card.appendChild(attTitle)
   card.appendChild(attList)
-
   const perksTitle = document.createElement('div')
   perksTitle.textContent = 'Perks'
   const perksList = document.createElement('ul')
@@ -52,9 +62,53 @@ function renderLoadout(data){
   data.perks.forEach(p => { const li = document.createElement('li'); li.textContent = p; perksList.appendChild(li) })
   card.appendChild(perksTitle)
   card.appendChild(perksList)
-
   wrapper.appendChild(card)
-  result.appendChild(wrapper)
+  stack.appendChild(wrapper)
+  // Also update the history viewer
+  updateHistoryViewer()
+function updateHistoryViewer(){
+  const viewer = document.getElementById('history-viewer')
+  const list = document.getElementById('history-list')
+  if (!viewer || !list) return
+  const hist = window.LOADOUT_HISTORY || []
+  if (hist.length === 0) {
+    viewer.style.display = 'none'
+    return
+  }
+  viewer.style.display = 'block'
+  list.innerHTML = ''
+  hist.forEach((data, idx) => {
+    const card = document.createElement('div')
+    card.className = 'card'
+    card.style.minWidth = '180px'
+    card.innerHTML = `<h4>${data.weapon}</h4><div>Attachments: ${(data.attachments||[]).join(', ')}</div><div>Perks: ${(data.perks||[]).join(', ')}</div><div class='badge'>${data.source||''}</div>`
+    list.appendChild(card)
+  })
+}
+// Restore history on load
+document.addEventListener('DOMContentLoaded', ()=>{
+   window.LOADOUT_HISTORY = JSON.parse(localStorage.getItem('loadout_history') || '[]')
+   updateHistoryViewer()
+})
+// Account sign-in (demo only, no backend)
+document.addEventListener('DOMContentLoaded', ()=>{
+  const form = document.getElementById('signin-form')
+  const status = document.getElementById('signin-status')
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      const email = document.getElementById('signin-email').value
+      const pw = document.getElementById('signin-password').value
+      if (email && pw) {
+        status.textContent = 'Signed in as ' + email + ' (demo only)'
+        form.reset()
+      } else {
+        status.textContent = 'Please enter email and password.'
+      }
+    })
+  }
+})
+}
 }
 
 // Navigation
@@ -62,12 +116,42 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('page-active'))
   const el = document.getElementById(id)
   if (el) el.classList.add('page-active')
+  // If navigating away from home, clear the loadout stack
+  if (id !== 'home') {
+    const result = document.getElementById('result')
+    if (result) {
+      const stack = result.querySelector('.loadout-stack')
+      if (stack) stack.remove()
+      // Optionally restore the hint
+      if (!result.querySelector('.hint')) {
+        const hint = document.createElement('p')
+        hint.className = 'hint'
+        hint.textContent = 'Click "Generate Loadout" to see a mock build.'
+        result.appendChild(hint)
+      }
+    }
+  }
 }
 
 // Home: generate loadout
 function initHome(){
   const btn = document.getElementById('generate')
+  const clearBtn = document.getElementById('clear-loadouts')
   if (!btn) return
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        const result = document.getElementById('result')
+        const stack = result.querySelector('.loadout-stack')
+        if (stack) stack.remove()
+        // Optionally restore the hint
+        if (!result.querySelector('.hint')) {
+          const hint = document.createElement('p')
+          hint.className = 'hint'
+          hint.textContent = 'Click "Generate Loadout" to see a mock build.'
+          result.appendChild(hint)
+        }
+      })
+    }
   const gameSelect = document.getElementById('game')
   const platformSelect = document.getElementById('platform')
   if (gameSelect){
@@ -314,6 +398,7 @@ async function initGames(){
 function updateHomePlatforms(gameId){
   const platformSelect = document.getElementById('platform')
   if (!platformSelect) return
+  // Do not clear the result area or stack here
   platformSelect.innerHTML = ''
   const data = window.GAMES_DATA || { games: [] }
   const g = data.games.find(x=>x.id===gameId)
@@ -322,7 +407,7 @@ function updateHomePlatforms(gameId){
   // normalize and infer common console platforms
   const set = new Set()
   rawPlatforms.forEach(praw => {
-    const p = (praw || '').toLowerCase()
+    const p = (praw || '').toString().trim().toLowerCase()
     if (p.includes('pc')) set.add('PC')
     if (p.includes('playstation')) set.add('PlayStation')
     if (p.includes('xbox')) set.add('Xbox')
@@ -340,7 +425,7 @@ function updateHomePlatforms(gameId){
     }
     // fallback to verbatim if nothing matched
     if (!p.includes('pc') && !p.includes('playstation') && !p.includes('xbox') && !p.includes('switch') && !p.includes('console')){
-      if (praw && praw.trim()) set.add(praw)
+      if (praw && praw.toString().trim()) set.add(praw.toString().trim())
     }
   })
 
@@ -422,6 +507,19 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     if (window.populateHomeGames) window.populateHomeGames()
   }
   if (window.attachHomeChange) window.attachHomeChange()
+
+  // Add debug panel for Chromebook users
+  function _refreshDbg(){
+    const gd = (window.GAMES_DATA && window.GAMES_DATA.games) ? window.GAMES_DATA.games.length : 0
+    const gameEl = document.getElementById('game')
+    const optCount = gameEl ? gameEl.options.length : 0
+    const platEl = document.getElementById('platform')
+    const platCount = platEl ? platEl.options.length : 0
+    const dbg = document.getElementById('debug-status')
+    if (dbg) dbg.textContent = `Games loaded: ${gd} | Game options: ${optCount} | Platforms: ${platCount}`
+  }
+  setInterval(_refreshDbg, 1000)
+  _refreshDbg()
 
   // ensure platform select is set for current game
   const gs = document.getElementById('game')

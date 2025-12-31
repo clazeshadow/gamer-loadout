@@ -21,6 +21,7 @@
           <a href="#games" data-route>Games</a>
           <a href="#subscribe" data-route>Subscribe</a>
           <a href="#about" data-route>About</a>
+          <a href="#account" data-route>Account</a>
         </nav>
       </div>
     </header>
@@ -41,31 +42,44 @@
 
         <div class="panel controls">
           <label>Game
-            <select id="game">
-              <!-- options populated dynamically -->
-            </select>
+            <select id="game"></select>
           </label>
-
           <label>Platform
-            <select id="platform">
-              <option value="PC">PC</option>
-            </select>
+            <select id="platform"></select>
           </label>
-
-          <label>Playstyle
+          <label>Player Type
             <select id="playstyle">
               <option value="aggressive">Aggressive</option>
               <option value="balanced">Balanced</option>
               <option value="defensive">Defensive</option>
             </select>
           </label>
-
           <button id="generate">Generate Loadout</button>
+          <button id="clear-loadouts" type="button" style="background:#222;color:#fff;margin-left:8px;">Clear Loadouts</button>
         </div>
-
         <section id="result" class="result">
-          <p class="hint">Click "Generate Loadout" to see a mock build.</p>
+          <div id="loadout-stack" class="loadout-stack"></div>
         </section>
+        <section id="history-viewer" class="panel" style="margin-top:18px;display:none">
+          <h4>Loadout History</h4>
+          <div id="history-list" style="display:flex;flex-wrap:wrap;gap:12px"></div>
+        </section>
+            <section id="account" class="page">
+              <h2>Account</h2>
+              <div class="panel">
+                <h3>Sign In</h3>
+                <form id="signin-form" autocomplete="off" style="max-width:320px">
+                  <label>Email
+                    <input type="email" id="signin-email" required autocomplete="username">
+                  </label>
+                  <label>Password
+                    <input type="password" id="signin-password" required autocomplete="current-password">
+                  </label>
+                  <button type="submit">Sign In</button>
+                </form>
+                <div id="signin-status" class="muted" style="margin-top:10px"></div>
+              </div>
+            </section>
       </section>
 
       <section id="subscribe" class="page">
@@ -137,5 +151,6 @@
     </main>
 
     <script src="/main.js"></script>
+    <div id="debug-status" style="position:fixed;right:12px;bottom:12px;padding:8px 10px;background:rgba(0,0,0,0.6);color:#fff;font-size:12px;border-radius:8px;z-index:9999;cursor:pointer;user-select:all"></div>
   </body>
 </html>
