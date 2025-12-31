@@ -71,6 +71,29 @@
           <h4>Loadout History</h4>
           <div id="history-list" style="display:flex;flex-wrap:wrap;gap:12px"></div>
         </section>
+
+        <div class="panel controls" style="margin-top:32px;border-top:1px solid rgba(255,255,255,0.1);padding-top:24px">
+          <h3 style="margin-top:0">CONTROL SETTINGS & SENSITIVITY</h3>
+          <p class="lead">Find the perfect sensitivity, keybinds, and controller settings for your playstyle.</p>
+          <label>Game
+            <select id="settings-game"></select>
+          </label>
+          <label>Platform
+            <select id="settings-platform"></select>
+          </label>
+          <label>Input Type
+            <select id="settings-input-type">
+              <option value="all">All Settings</option>
+              <option value="keyboard">Keyboard & Mouse</option>
+              <option value="controller">Controller</option>
+            </select>
+          </label>
+          <button id="generate-settings">Get Settings</button>
+          <button id="clear-settings" type="button" style="background:#222;color:#fff;margin-left:8px;">Clear</button>
+        </div>
+        <section id="settings-result" class="result">
+          <div id="settings-stack" style="display:flex;flex-wrap:wrap;gap:20px;margin-top:8px;align-items:flex-start;justify-content:flex-start;min-height:200px"></div>
+        </section>
             <section id="account" class="page">
               <h2>Account</h2>
               <div class="panel">

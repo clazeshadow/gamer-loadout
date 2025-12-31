@@ -172,6 +172,222 @@ function initHome(){
   })
 }
 
+// Settings Generator
+function initSettingsGenerator(){
+  const settingsGameSelect = document.getElementById('settings-game')
+  const settingsPlatformSelect = document.getElementById('settings-platform')
+  const settingsInputTypeSelect = document.getElementById('settings-input-type')
+  const generateBtn = document.getElementById('generate-settings')
+  const clearBtn = document.getElementById('clear-settings')
+  
+  if (!settingsGameSelect || !generateBtn) return
+
+  // Populate games
+  function populateSettingsGames(){
+    if (!settingsGameSelect) return
+    const dataSrc = window.GAMES_DATA || { games: [] }
+    settingsGameSelect.innerHTML = '<option value="">Select a game...</option>'
+    dataSrc.games.forEach(g => {
+      const o = document.createElement('option')
+      o.value = g.id
+      o.textContent = g.name
+      settingsGameSelect.appendChild(o)
+    })
+  }
+
+  // Update platforms when game changes
+  settingsGameSelect.addEventListener('change', () => {
+    const gameId = settingsGameSelect.value
+    if (!gameId) {
+      settingsPlatformSelect.innerHTML = '<option value="">Select a platform...</option>'
+      return
+    }
+    const dataSrc = window.GAMES_DATA || { games: [] }
+    const game = dataSrc.games.find(g => g.id === gameId)
+    settingsPlatformSelect.innerHTML = '<option value="">Select a platform...</option>'
+    if (game && game.platforms) {
+      game.platforms.forEach(pf => {
+        const o = document.createElement('option')
+        const val = (typeof pf === 'string') ? pf : (pf.platform || '')
+        o.value = val
+        o.textContent = val
+        settingsPlatformSelect.appendChild(o)
+      })
+    }
+  })
+
+  // Generate settings display
+  generateBtn.addEventListener('click', () => {
+    const gameId = settingsGameSelect.value
+    const platform = settingsPlatformSelect.value
+    const inputType = settingsInputTypeSelect.value
+    
+    if (!gameId || !platform) {
+      alert('Please select a game and platform')
+      return
+    }
+
+    const dataSrc = window.GAMES_DATA || { games: [] }
+    const game = dataSrc.games.find(g => g.id === gameId)
+    if (!game) return
+
+    const pf = (game.platforms.find(p => (typeof p === 'string') ? p === platform : (p.platform === platform)) || game.platforms[0])
+    if (!pf || !pf.controlSettings) {
+      alert('No control settings available for this game')
+      return
+    }
+
+    renderControlSettings(game.name, platform, pf.controlSettings, inputType)
+  })
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      const stack = document.getElementById('settings-stack')
+      if (stack) stack.innerHTML = ''
+    })
+  }
+
+  populateSettingsGames()
+}
+
+function renderControlSettings(gameName, platform, cs, inputType = 'all'){
+  const stack = document.getElementById('settings-stack')
+  if (!stack) return
+  
+  stack.innerHTML = ''
+  
+  const card = document.createElement('div')
+  card.className = 'card'
+  card.style.minWidth = '280px'
+  card.style.maxWidth = '400px'
+  
+  const title = document.createElement('h3')
+  title.textContent = gameName
+  const subtitle = document.createElement('p')
+  subtitle.style.fontSize = '13px'
+  subtitle.style.color = 'var(--muted)'
+  subtitle.style.marginTop = '4px'
+  subtitle.textContent = platform
+  card.appendChild(title)
+  card.appendChild(subtitle)
+  
+  // Keyboard & Mouse settings
+  if ((inputType === 'all' || inputType === 'keyboard') && (cs.mouseSensitivity || cs.dpi || cs.keybinds)) {
+    const kbSection = document.createElement('div')
+    kbSection.style.marginTop = '16px'
+    kbSection.style.paddingTop = '12px'
+    kbSection.style.borderTop = '1px solid rgba(255,255,255,0.1)'
+    
+    const kbTitle = document.createElement('div')
+    kbTitle.style.fontWeight = 'bold'
+    kbTitle.style.color = 'var(--accent)'
+    kbTitle.style.marginBottom = '10px'
+    kbTitle.style.fontSize = '14px'
+    kbTitle.textContent = '⌨️ Keyboard & Mouse'
+    kbSection.appendChild(kbTitle)
+    
+    if (cs.mouseSensitivity) {
+      const p = document.createElement('p')
+      p.style.margin = '6px 0'
+      p.style.fontSize = '13px'
+      p.innerHTML = `<strong>Sensitivity:</strong> ${cs.mouseSensitivity}`
+      kbSection.appendChild(p)
+    }
+    if (cs.dpi) {
+      const p = document.createElement('p')
+      p.style.margin = '6px 0'
+      p.style.fontSize = '13px'
+      p.innerHTML = `<strong>DPI:</strong> ${cs.dpi}`
+      kbSection.appendChild(p)
+    }
+    if (cs.adsMultiplier || cs.adsSensitivity) {
+      const p = document.createElement('p')
+      p.style.margin = '6px 0'
+      p.style.fontSize = '13px'
+      p.innerHTML = `<strong>ADS Sens:</strong> ${cs.adsMultiplier || cs.adsSensitivity}`
+      kbSection.appendChild(p)
+    }
+    if (cs.keybinds) {
+      const p = document.createElement('p')
+      p.style.margin = '8px 0 4px 0'
+      p.style.fontSize = '13px'
+      p.innerHTML = '<strong>Keybinds:</strong>'
+      kbSection.appendChild(p)
+      
+      const list = document.createElement('ul')
+      list.style.fontSize = '12px'
+      list.style.margin = '4px 0'
+      list.style.paddingLeft = '18px'
+      Object.entries(cs.keybinds).forEach(([key, val]) => {
+        const li = document.createElement('li')
+        li.textContent = `${key}: ${val}`
+        list.appendChild(li)
+      })
+      kbSection.appendChild(list)
+    }
+    if (cs.recommendations) {
+      const p = document.createElement('p')
+      p.style.margin = '8px 0 0 0'
+      p.style.fontSize = '12px'
+      p.style.color = 'var(--muted)'
+      p.innerHTML = '<strong>💡 Tips:</strong> ' + cs.recommendations.join(', ')
+      kbSection.appendChild(p)
+    }
+    
+    card.appendChild(kbSection)
+  }
+  
+  // Controller settings
+  if ((inputType === 'all' || inputType === 'controller') && cs.controller) {
+    const ctrlSection = document.createElement('div')
+    ctrlSection.style.marginTop = '16px'
+    ctrlSection.style.paddingTop = '12px'
+    ctrlSection.style.borderTop = '1px solid rgba(255,255,255,0.1)'
+    
+    const ctrlTitle = document.createElement('div')
+    ctrlTitle.style.fontWeight = 'bold'
+    ctrlTitle.style.color = 'var(--accent)'
+    ctrlTitle.style.marginBottom = '10px'
+    ctrlTitle.style.fontSize = '14px'
+    ctrlTitle.textContent = '🎮 Controller'
+    ctrlSection.appendChild(ctrlTitle)
+    
+    const ctrl = cs.controller
+    if (ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity) {
+      const p = document.createElement('p')
+      p.style.margin = '6px 0'
+      p.style.fontSize = '13px'
+      p.innerHTML = `<strong>Look Sensitivity:</strong> ${ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity}`
+      ctrlSection.appendChild(p)
+    }
+    if (ctrl.adsMultiplier) {
+      const p = document.createElement('p')
+      p.style.margin = '6px 0'
+      p.style.fontSize = '13px'
+      p.innerHTML = `<strong>ADS Multiplier:</strong> ${ctrl.adsMultiplier}`
+      ctrlSection.appendChild(p)
+    }
+    if (ctrl.deadzone) {
+      const p = document.createElement('p')
+      p.style.margin = '6px 0'
+      p.style.fontSize = '13px'
+      p.innerHTML = `<strong>Deadzone:</strong> ${typeof ctrl.deadzone === 'object' ? JSON.stringify(ctrl.deadzone) : ctrl.deadzone}`
+      ctrlSection.appendChild(p)
+    }
+    if (ctrl.buttonLayout) {
+      const p = document.createElement('p')
+      p.style.margin = '6px 0'
+      p.style.fontSize = '13px'
+      p.innerHTML = `<strong>Button Layout:</strong> ${ctrl.buttonLayout}`
+      ctrlSection.appendChild(p)
+    }
+    
+    card.appendChild(ctrlSection)
+  }
+  
+  stack.appendChild(card)
+}
+
 // Subscribe handlers
 function initSubscribe(){
   document.querySelectorAll('.subscribe').forEach(b=>{
@@ -740,6 +956,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   // Initial population after data load
   if (window.GAMES_DATA && window.GAMES_DATA.games) populateGames();
   initHome();
+  initSettingsGenerator();
   initSubscribe();
 
 });
