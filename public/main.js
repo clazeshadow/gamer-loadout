@@ -454,23 +454,58 @@ async function initGames(){
       }
 
       rl.innerHTML = ''
-      const primary = document.createElement('p')
-      primary.innerHTML = `<strong>Primary:</strong> ${pf.recommendedLoadout.primary || '—'}`
-      rl.appendChild(primary)
-      const secondary = document.createElement('p')
-      secondary.innerHTML = `<strong>Secondary:</strong> ${pf.recommendedLoadout.secondary || '—'}`
-      rl.appendChild(secondary)
-      if (pf.recommendedLoadout.attachments && pf.recommendedLoadout.attachments.length){
-        const at = document.createElement('p')
-        at.innerHTML = '<strong>Attachments:</strong> ' + pf.recommendedLoadout.attachments.join(', ')
-        rl.appendChild(at)
+      
+      // Handle variant-based loadouts (with aggressive/balanced/defensive)
+      if (pf.recommendedLoadout.variants) {
+        const variants = pf.recommendedLoadout.variants
+        Object.entries(variants).forEach(([variantName, variantData]) => {
+          const h = document.createElement('h5')
+          h.textContent = variantName.charAt(0).toUpperCase() + variantName.slice(1)
+          h.style.marginTop = '10px'
+          h.style.marginBottom = '6px'
+          rl.appendChild(h)
+          
+          // Display all variant properties
+          Object.entries(variantData).forEach(([key, value]) => {
+            if (key === 'perks' || key === 'attachments' || key === 'armor' || key === 'mods') {
+              if (Array.isArray(value) && value.length) {
+                const p = document.createElement('p')
+                p.style.margin = '4px 0'
+                p.innerHTML = `<strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value.join(', ')}`
+                rl.appendChild(p)
+              } else if (typeof value === 'object' && value !== null) {
+                const p = document.createElement('p')
+                p.style.margin = '4px 0'
+                p.innerHTML = `<strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${JSON.stringify(value).replace(/[{}"/]/g, '')}`
+                rl.appendChild(p)
+              }
+            } else if (key !== 'variants') {
+              const p = document.createElement('p')
+              p.style.margin = '4px 0'
+              p.innerHTML = `<strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value}`
+              rl.appendChild(p)
+            }
+          })
+        })
+      } else {
+        // Original logic for simple loadouts (without variants)
+        const primary = document.createElement('p')
+        primary.innerHTML = `<strong>Primary:</strong> ${pf.recommendedLoadout.primary || '—'}`
+        rl.appendChild(primary)
+        const secondary = document.createElement('p')
+        secondary.innerHTML = `<strong>Secondary:</strong> ${pf.recommendedLoadout.secondary || '—'}`
+        rl.appendChild(secondary)
+        if (pf.recommendedLoadout.attachments && pf.recommendedLoadout.attachments.length){
+          const at = document.createElement('p')
+          at.innerHTML = '<strong>Attachments:</strong> ' + pf.recommendedLoadout.attachments.join(', ')
+          rl.appendChild(at)
+        }
+        if (pf.recommendedLoadout.perks && pf.recommendedLoadout.perks.length){
+          const pk = document.createElement('p')
+          pk.innerHTML = '<strong>Perks:</strong> ' + pf.recommendedLoadout.perks.join(', ')
+          rl.appendChild(pk)
+        }
       }
-      if (pf.recommendedLoadout.perks && pf.recommendedLoadout.perks.length){
-        const pk = document.createElement('p')
-        pk.innerHTML = '<strong>Perks:</strong> ' + pf.recommendedLoadout.perks.join(', ')
-        rl.appendChild(pk)
-      }
-    }
 
     pfSelect.addEventListener('change', ()=>{
       const sel = pfSelect.value
