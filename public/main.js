@@ -736,6 +736,7 @@ async function initGames(){
           rl.appendChild(pk)
         }
       }
+    }
 
     pfSelect.addEventListener('change', ()=>{
       const sel = pfSelect.value
