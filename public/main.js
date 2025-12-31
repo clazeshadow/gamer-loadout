@@ -182,17 +182,31 @@ function initSettingsGenerator(){
   
   if (!settingsGameSelect || !generateBtn) return
 
-  // Populate games
+  // Populate games - wait for GAMES_DATA to be available
   function populateSettingsGames(){
     if (!settingsGameSelect) return
-    const dataSrc = window.GAMES_DATA || { games: [] }
-    settingsGameSelect.innerHTML = '<option value="">Select a game...</option>'
-    dataSrc.games.forEach(g => {
-      const o = document.createElement('option')
-      o.value = g.id
-      o.textContent = g.name
-      settingsGameSelect.appendChild(o)
-    })
+    const maxRetries = 50
+    let retries = 0
+    
+    const tryPopulate = () => {
+      const dataSrc = window.GAMES_DATA
+      if (!dataSrc && retries < maxRetries) {
+        retries++
+        setTimeout(tryPopulate, 100)
+        return
+      }
+      
+      const data = dataSrc || { games: [] }
+      settingsGameSelect.innerHTML = '<option value="">Select a game...</option>'
+      data.games.forEach(g => {
+        const o = document.createElement('option')
+        o.value = g.id
+        o.textContent = g.name
+        settingsGameSelect.appendChild(o)
+      })
+    }
+    
+    tryPopulate()
   }
 
   // Update platforms when game changes
@@ -399,7 +413,7 @@ function initSubscribe(){
   })
 }
 
-const VERSION_TAG = 'v20251231a'
+const VERSION_TAG = 'v20251231b'
 
 // Games page
 async function initGames(){
