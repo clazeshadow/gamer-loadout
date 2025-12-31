@@ -1037,21 +1037,9 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   // Restore history and sign-in after DOM ready
   window.LOADOUT_HISTORY = JSON.parse(localStorage.getItem('loadout_history') || '[]');
   updateHistoryViewer();
-  const form = document.getElementById('signin-form');
-  const status = document.getElementById('signin-status');
-  if (form) {
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const email = document.getElementById('signin-email').value;
-      const pw = document.getElementById('signin-password').value;
-      if (email && pw) {
-        status.textContent = 'Signed in as ' + email + ' (demo only)';
-        form.reset();
-      } else {
-        status.textContent = 'Please enter email and password.';
-      }
-    });
-  }
+  
+  // Initialize authentication
+  initAuth();
 
   // Initial population after data load
   if (window.GAMES_DATA && window.GAMES_DATA.games) populateGames();
@@ -1061,3 +1049,217 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
 });
 
+// Authentication functions
+function initAuth() {
+  // Check if user is already logged in
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    verifyToken(token);
+  }
+
+  // Sign In form
+  const signinForm = document.getElementById('signin-form');
+  if (signinForm) {
+    signinForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('signin-email').value;
+      const password = document.getElementById('signin-password').value;
+      const status = document.getElementById('signin-status');
+      
+      status.textContent = 'Signing in...';
+      
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem('auth_token', data.token);
+          status.textContent = 'Success! Redirecting...';
+          status.style.color = 'var(--accent)';
+          setTimeout(() => {
+            displayUserProfile(data.user);
+            signinForm.reset();
+          }, 500);
+        } else {
+          status.textContent = data.error || 'Sign in failed';
+          status.style.color = '#ff4444';
+        }
+      } catch (error) {
+        status.textContent = 'Network error. Please try again.';
+        status.style.color = '#ff4444';
+      }
+    });
+  }
+
+  // Sign Up form
+  const signupForm = document.getElementById('signup-form');
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-confirm').value;
+      const status = document.getElementById('signup-status');
+      
+      if (password !== confirm) {
+        status.textContent = 'Passwords do not match';
+        status.style.color = '#ff4444';
+        return;
+      }
+      
+      status.textContent = 'Creating account...';
+      status.style.color = 'var(--muted)';
+      
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem('auth_token', data.token);
+          status.textContent = 'Account created! Redirecting...';
+          status.style.color = 'var(--accent)';
+          setTimeout(() => {
+            displayUserProfile(data.user);
+            signupForm.reset();
+          }, 500);
+        } else {
+          status.textContent = data.error || 'Registration failed';
+          status.style.color = '#ff4444';
+        }
+      } catch (error) {
+        status.textContent = 'Network error. Please try again.';
+        status.style.color = '#ff4444';
+      }
+    });
+  }
+
+  // Forgot Password form
+  const forgotForm = document.getElementById('forgot-form');
+  if (forgotForm) {
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('forgot-email').value;
+      const status = document.getElementById('forgot-status');
+      
+      status.textContent = 'Sending reset link...';
+      status.style.color = 'var(--muted)';
+      
+      try {
+        const response = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          status.textContent = data.message;
+          status.style.color = 'var(--accent)';
+          forgotForm.reset();
+          
+          // For demo: show reset token
+          if (data.resetToken) {
+            status.innerHTML += `<br><small>Demo mode - Reset token: ${data.resetToken}</small>`;
+          }
+        } else {
+          status.textContent = data.error || 'Request failed';
+          status.style.color = '#ff4444';
+        }
+      } catch (error) {
+        status.textContent = 'Network error. Please try again.';
+        status.style.color = '#ff4444';
+      }
+    });
+  }
+
+  // Logout button
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('auth_token');
+      hideUserProfile();
+    });
+  }
+
+  // Toggle between forms
+  document.getElementById('show-signup')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('signin-container').style.display = 'none';
+    document.getElementById('signup-container').style.display = 'block';
+    document.getElementById('forgot-container').style.display = 'none';
+  });
+
+  document.getElementById('show-signin')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('signin-container').style.display = 'block';
+    document.getElementById('signup-container').style.display = 'none';
+    document.getElementById('forgot-container').style.display = 'none';
+  });
+
+  document.getElementById('show-forgot')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('signin-container').style.display = 'none';
+    document.getElementById('signup-container').style.display = 'none';
+    document.getElementById('forgot-container').style.display = 'block';
+  });
+
+  document.getElementById('back-to-signin')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('signin-container').style.display = 'block';
+    document.getElementById('signup-container').style.display = 'none';
+    document.getElementById('forgot-container').style.display = 'none';
+  });
+}
+
+async function verifyToken(token) {
+  try {
+    const response = await fetch('/api/auth/me', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      displayUserProfile(data.user);
+    } else {
+      localStorage.removeItem('auth_token');
+    }
+  } catch (error) {
+    console.error('Token verification failed:', error);
+    localStorage.removeItem('auth_token');
+  }
+}
+
+function displayUserProfile(user) {
+  document.getElementById('auth-forms').style.display = 'none';
+  document.getElementById('account-view').style.display = 'block';
+  document.getElementById('user-email').textContent = user.email;
+  document.getElementById('user-tier').textContent = user.tier;
+  
+  const createdDate = new Date(user.createdAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  document.getElementById('user-created').textContent = createdDate;
+}
+
+function hideUserProfile() {
+  document.getElementById('auth-forms').style.display = 'block';
+  document.getElementById('account-view').style.display = 'none';
+  document.getElementById('signin-container').style.display = 'block';
+  document.getElementById('signup-container').style.display = 'none';
+  document.getElementById('forgot-container').style.display = 'none';
+}

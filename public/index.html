@@ -96,23 +96,80 @@
         </section>
             <section id="account" class="page">
               <h2>Account</h2>
-              <div class="panel">
-                <h3>Sign In</h3>
-                <form id="signin-form" autocomplete="off" style="max-width:320px">
-                  <label>Email
-                    <input type="email" id="signin-email" required autocomplete="username">
-                  </label>
-                  <label>Password
-                    <input type="password" id="signin-password" required autocomplete="current-password">
-                  </label>
-                  <button type="submit">Sign In</button>
-                </form>
-                <div id="signin-status" class="muted" style="margin-top:10px"></div>
+              
+              <!-- Account View (when logged in) -->
+              <div id="account-view" style="display:none">
+                <div class="panel">
+                  <h3>Your Profile</h3>
+                  <p><strong>Email:</strong> <span id="user-email"></span></p>
+                  <p><strong>Account Tier:</strong> <span id="user-tier" style="text-transform:capitalize"></span></p>
+                  <p><strong>Member Since:</strong> <span id="user-created"></span></p>
+                  <button id="logout-btn" style="margin-top:16px;background:#444">Sign Out</button>
+                </div>
+              </div>
+
+              <!-- Auth Forms (when logged out) -->
+              <div id="auth-forms">
+                <!-- Sign In Form -->
+                <div id="signin-container" class="panel">
+                  <h3>Sign In</h3>
+                  <form id="signin-form" autocomplete="off" style="max-width:320px">
+                    <label>Email
+                      <input type="email" id="signin-email" required autocomplete="username">
+                    </label>
+                    <label>Password
+                      <input type="password" id="signin-password" required autocomplete="current-password">
+                    </label>
+                    <button type="submit">Sign In</button>
+                  </form>
+                  <div id="signin-status" class="muted" style="margin-top:10px"></div>
+                  <p style="margin-top:12px;font-size:14px">
+                    <a href="#" id="show-signup" style="color:var(--accent)">Create an account</a> · 
+                    <a href="#" id="show-forgot" style="color:var(--accent)">Forgot password?</a>
+                  </p>
+                </div>
+
+                <!-- Sign Up Form -->
+                <div id="signup-container" class="panel" style="display:none">
+                  <h3>Create Account</h3>
+                  <form id="signup-form" autocomplete="off" style="max-width:320px">
+                    <label>Email
+                      <input type="email" id="signup-email" required autocomplete="username">
+                    </label>
+                    <label>Password
+                      <input type="password" id="signup-password" required autocomplete="new-password" minlength="8">
+                      <small style="color:var(--muted)">At least 8 characters</small>
+                    </label>
+                    <label>Confirm Password
+                      <input type="password" id="signup-confirm" required autocomplete="new-password" minlength="8">
+                    </label>
+                    <button type="submit">Create Account</button>
+                  </form>
+                  <div id="signup-status" class="muted" style="margin-top:10px"></div>
+                  <p style="margin-top:12px;font-size:14px">
+                    Already have an account? <a href="#" id="show-signin" style="color:var(--accent)">Sign in</a>
+                  </p>
+                </div>
+
+                <!-- Forgot Password Form -->
+                <div id="forgot-container" class="panel" style="display:none">
+                  <h3>Reset Password</h3>
+                  <form id="forgot-form" autocomplete="off" style="max-width:320px">
+                    <label>Email
+                      <input type="email" id="forgot-email" required autocomplete="username">
+                    </label>
+                    <button type="submit">Send Reset Link</button>
+                  </form>
+                  <div id="forgot-status" class="muted" style="margin-top:10px"></div>
+                  <p style="margin-top:12px;font-size:14px">
+                    <a href="#" id="back-to-signin" style="color:var(--accent)">Back to sign in</a>
+                  </p>
+                </div>
               </div>
             </section>
       </section>
 
-      <section id="subscribe" class="page">
+      <section id="subscribe" class="page"
         <h2>Subscribe</h2>
         <p class="lead">Choose a plan to get AI-optimized loadouts and extra features.</p>
 
