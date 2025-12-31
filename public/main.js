@@ -315,7 +315,7 @@ function initSettingsGenerator(){
       return
     }
 
-    console.log('Calling renderControlSettings with:', gameName, platform, pf.controlSettings)
+    console.log('Calling renderControlSettings with:', game.name, platform, pf.controlSettings)
     renderControlSettings(game.name, platform, pf.controlSettings, inputType)
   })
 
