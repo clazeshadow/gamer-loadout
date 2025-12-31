@@ -429,51 +429,59 @@ function renderControlSettings(gameName, platform, cs, inputType = 'all'){
   }
   
   // Controller settings
-  if ((inputType === 'all' || inputType === 'controller') && cs.controller) {
-    const ctrlSection = document.createElement('div')
-    ctrlSection.style.marginTop = '16px'
-    ctrlSection.style.paddingTop = '12px'
-    ctrlSection.style.borderTop = '1px solid rgba(255,255,255,0.1)'
+  if (inputType === 'all' || inputType === 'controller') {
+    // Check if there are controller settings (either nested or direct)
+    const ctrl = cs.controller || cs
+    const hasControllerSettings = ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity || 
+                                    ctrl.adsMultiplier || ctrl.deadzone || ctrl.buttonLayout
     
-    const ctrlTitle = document.createElement('div')
-    ctrlTitle.style.fontWeight = 'bold'
-    ctrlTitle.style.color = 'var(--accent)'
-    ctrlTitle.style.marginBottom = '10px'
-    ctrlTitle.style.fontSize = '14px'
-    ctrlTitle.textContent = '🎮 Controller'
-    ctrlSection.appendChild(ctrlTitle)
-    
-    const ctrl = cs.controller
-    if (ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity) {
-      const p = document.createElement('p')
-      p.style.margin = '6px 0'
-      p.style.fontSize = '13px'
-      p.innerHTML = `<strong>Look Sensitivity:</strong> ${ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity}`
-      ctrlSection.appendChild(p)
+    if (hasControllerSettings) {
+      const ctrlSection = document.createElement('div')
+      ctrlSection.style.marginTop = '16px'
+      ctrlSection.style.paddingTop = '12px'
+      ctrlSection.style.borderTop = '1px solid rgba(255,255,255,0.1)'
+      
+      const ctrlTitle = document.createElement('div')
+      ctrlTitle.style.fontWeight = 'bold'
+      ctrlTitle.style.color = 'var(--accent)'
+      ctrlTitle.style.marginBottom = '10px'
+      ctrlTitle.style.fontSize = '14px'
+      ctrlTitle.textContent = '🎮 Controller'
+      ctrlSection.appendChild(ctrlTitle)
+      
+      if (ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.lookSensitivityY || ctrl.sensitivity) {
+        const p = document.createElement('p')
+        p.style.margin = '6px 0'
+        p.style.fontSize = '13px'
+        const sensValue = ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity
+        const sensY = ctrl.lookSensitivityY ? ` / ${ctrl.lookSensitivityY}` : ''
+        p.innerHTML = `<strong>Look Sensitivity:</strong> ${sensValue}${sensY}`
+        ctrlSection.appendChild(p)
+      }
+      if (ctrl.adsMultiplier) {
+        const p = document.createElement('p')
+        p.style.margin = '6px 0'
+        p.style.fontSize = '13px'
+        p.innerHTML = `<strong>ADS Multiplier:</strong> ${ctrl.adsMultiplier}`
+        ctrlSection.appendChild(p)
+      }
+      if (ctrl.deadzone) {
+        const p = document.createElement('p')
+        p.style.margin = '6px 0'
+        p.style.fontSize = '13px'
+        p.innerHTML = `<strong>Deadzone:</strong> ${typeof ctrl.deadzone === 'object' ? JSON.stringify(ctrl.deadzone) : ctrl.deadzone}`
+        ctrlSection.appendChild(p)
+      }
+      if (ctrl.buttonLayout) {
+        const p = document.createElement('p')
+        p.style.margin = '6px 0'
+        p.style.fontSize = '13px'
+        p.innerHTML = `<strong>Button Layout:</strong> ${ctrl.buttonLayout}`
+        ctrlSection.appendChild(p)
+      }
+      
+      card.appendChild(ctrlSection)
     }
-    if (ctrl.adsMultiplier) {
-      const p = document.createElement('p')
-      p.style.margin = '6px 0'
-      p.style.fontSize = '13px'
-      p.innerHTML = `<strong>ADS Multiplier:</strong> ${ctrl.adsMultiplier}`
-      ctrlSection.appendChild(p)
-    }
-    if (ctrl.deadzone) {
-      const p = document.createElement('p')
-      p.style.margin = '6px 0'
-      p.style.fontSize = '13px'
-      p.innerHTML = `<strong>Deadzone:</strong> ${typeof ctrl.deadzone === 'object' ? JSON.stringify(ctrl.deadzone) : ctrl.deadzone}`
-      ctrlSection.appendChild(p)
-    }
-    if (ctrl.buttonLayout) {
-      const p = document.createElement('p')
-      p.style.margin = '6px 0'
-      p.style.fontSize = '13px'
-      p.innerHTML = `<strong>Button Layout:</strong> ${ctrl.buttonLayout}`
-      ctrlSection.appendChild(p)
-    }
-    
-    card.appendChild(ctrlSection)
   }
   
   stack.appendChild(card)
