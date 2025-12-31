@@ -191,15 +191,27 @@ async function initGames(){
   if (!listEl || !detailEl || !search) return
 
   let data = { games: [] }
-  try {
-    const res = await fetch('/data/games.json')
-    data = await res.json()
-    // expose globally for other functions
-    window.GAMES_DATA = data
-  } catch (e) {
-    listEl.innerHTML = '<div class="muted">Failed to load games data.</div>'
-    return
+  const fallbacks = ['/data/games.json', './data/games.json', '/public/data/games.json']
+  let loaded = false
+  for (const path of fallbacks){
+    if (loaded) break
+    try {
+      const res = await fetch(path)
+      if (res.ok){
+        data = await res.json()
+        loaded = true
+        break
+      }
+    } catch (e) {
+      // continue to next fallback
+    }
   }
+  if (!loaded){
+    // minimal inline fallback so UI still works
+    data = { games: [ { id:'fallback', name:'Fallback Game', platforms:[{ platform:'PC', bestSettings:['FPS:60+'], recommendedLoadout:{ primary:'Sample', secondary:'Sample', attachments:[], perks:[] } }] } ] }
+    listEl.innerHTML = '<div class="muted">Using fallback data (games.json not reachable).</div>'
+  }
+  window.GAMES_DATA = data
 
   function renderList(filter=''){
     listEl.innerHTML = ''
