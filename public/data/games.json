@@ -3,55 +3,55 @@
     { "id": "fortnite", "name": "Fortnite", "platforms": [
       { "platform": "PC", "bestSettings": ["Graphics: Performance","FPS: Unlocked, 120+","Mouse sensitivity: Low","Edit sensitivity multiplier:1.0-1.2"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "Combat SMG", "secondary": "Auto Shotgun", "attachments": ["Laser Sight"], "perks": ["Sprint Reload", "Double Pump"] },
-          "balanced": { "primary": "MK7 Assault Rifle", "secondary": "Striker Pump Shotgun", "attachments": ["Red Dot Sight"], "perks": ["Fast Reload", "Quick Edit"] },
-          "defensive": { "primary": "Hunter Bolt-Action Sniper", "secondary": "Ranger Pistol", "attachments": ["4x Scope"], "perks": ["Cover Mastery", "Shield Boost"] }
+          "aggressive": { "primary": "Combat SMG", "secondary": "Auto Shotgun", "utility": "Shockwave Grenades", "healing": "Med Kits + Shield Potions", "harvesting": "Pickaxe", "perks": ["Sprint Reload", "Double Pump", "Fast Edit"] },
+          "balanced": { "primary": "MK7 Assault Rifle", "secondary": "Striker Pump Shotgun", "utility": "Shockwave Grenades", "healing": "Med Kits + Shield Potions", "harvesting": "Pickaxe", "perks": ["Fast Reload", "Quick Edit", "Build Speed"] },
+          "defensive": { "primary": "Hunter Bolt-Action Sniper", "secondary": "Ranger Pistol", "utility": "Port-A-Fort", "healing": "Slurp Juice + Chug Splash", "harvesting": "Pickaxe", "perks": ["Cover Mastery", "Shield Boost", "Heal Speed"] }
         }
       } },
       { "platform": "PlayStation", "bestSettings": ["Aim Assist: On","Graphics: Performance"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "Stinger SMG", "secondary": "Drum Shotgun", "attachments": ["Laser Sight"], "perks": ["Sprint", "Auto Reload"] },
-          "balanced": { "primary": "Ranger Assault Rifle", "secondary": "Striker Pump Shotgun", "attachments": ["Grip Tape"], "perks": ["Mobility", "Quick Edit"] },
-          "defensive": { "primary": "MK7 Assault Rifle", "secondary": "Sidearm Pistol", "attachments": ["Suppressor"], "perks": ["Cover Mastery", "Shield Boost"] }
+          "aggressive": { "primary": "Stinger SMG", "secondary": "Drum Shotgun", "utility": "Shockwave Grenades", "healing": "Med Kits + Shield Potions", "harvesting": "Pickaxe", "perks": ["Sprint", "Auto Reload", "Quick Build"] },
+          "balanced": { "primary": "Ranger Assault Rifle", "secondary": "Striker Pump Shotgun", "utility": "Shockwave Grenades", "healing": "Bandages + Small Shield Potions", "harvesting": "Pickaxe", "perks": ["Mobility", "Quick Edit", "Material Gain"] },
+          "defensive": { "primary": "MK7 Assault Rifle", "secondary": "Sidearm Pistol", "utility": "Port-A-Fort", "healing": "Slurp Juice + Chug Splash", "harvesting": "Pickaxe", "perks": ["Cover Mastery", "Shield Boost", "Heal Speed"] }
         }
       } },
       { "platform": "Xbox", "bestSettings": ["Aim Assist: On","Graphics: Balanced"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "Rapid Fire SMG", "secondary": "Auto Shotgun", "attachments": ["Laser Sight"], "perks": ["Sprint", "Quick Swap"] },
-          "balanced": { "primary": "MK7 Assault Rifle", "secondary": "Striker Pump Shotgun", "attachments": ["Red Dot Sight"], "perks": ["Mobility", "Fast Reload"] },
-          "defensive": { "primary": "Ranger Assault Rifle", "secondary": "Sidearm Pistol", "attachments": ["Suppressor"], "perks": ["Cover Mastery", "Shield Boost"] }
+          "aggressive": { "primary": "Rapid Fire SMG", "secondary": "Auto Shotgun", "utility": "Shockwave Grenades", "healing": "Med Kits + Shield Potions", "harvesting": "Pickaxe", "perks": ["Sprint", "Quick Swap", "Fast Edit"] },
+          "balanced": { "primary": "MK7 Assault Rifle", "secondary": "Striker Pump Shotgun", "utility": "Shockwave Grenades", "healing": "Bandages + Small Shield Potions", "harvesting": "Pickaxe", "perks": ["Mobility", "Fast Reload", "Build Speed"] },
+          "defensive": { "primary": "Ranger Assault Rifle", "secondary": "Sidearm Pistol", "utility": "Port-A-Fort", "healing": "Slurp Juice + Chug Splash", "harvesting": "Pickaxe", "perks": ["Cover Mastery", "Shield Boost", "Heal Speed"] }
         }
       } }
     ] },
     { "id": "apex-legends", "name": "Apex Legends", "platforms": [
       { "platform": "PC", "bestSettings": ["FPS: 144+","FOV: 90"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "CAR SMG", "secondary": "Wingman", "attachments": ["Laser Sight", "Barrel Stabilizer"], "perks": ["Stim Rush", "Quick Swap"] },
-          "balanced": { "primary": "R-301 Carbine", "secondary": "RE-45", "attachments": ["Barrel Stabilizer", "2x HCOG"], "perks": ["Mobility", "Fast Heal"] },
-          "defensive": { "primary": "G7 Scout", "secondary": "Mozambique", "attachments": ["3x Optic"], "perks": ["Cover Mastery", "Shield Regen"] }
+          "aggressive": { "legend": "Wraith", "primary": "CAR SMG", "secondary": "Wingman", "grenades": "Arc Star x2", "healing": "Med Kit x2, Syringe x4", "shields": "Shield Battery x2, Shield Cell x4", "armor": "Purple Body Shield", "attachments": ["Laser Sight", "Barrel Stabilizer", "Extended Light Mag"], "perks": ["Stim Rush", "Quick Swap"] },
+          "balanced": { "legend": "Bangalore", "primary": "R-301 Carbine", "secondary": "RE-45", "grenades": "Frag Grenade x2", "healing": "Med Kit x2, Syringe x4", "shields": "Shield Battery x2, Shield Cell x4", "armor": "Purple Body Shield", "attachments": ["Barrel Stabilizer", "2x HCOG", "Extended Light Mag"], "perks": ["Mobility", "Fast Heal"] },
+          "defensive": { "legend": "Gibraltar", "primary": "G7 Scout", "secondary": "Mozambique", "grenades": "Thermite x2", "healing": "Med Kit x3, Syringe x4", "shields": "Shield Battery x3, Shield Cell x4", "armor": "Red Evo Shield", "attachments": ["3x Optic", "Double Tap Trigger", "Extended Light Mag"], "perks": ["Cover Mastery", "Shield Regen"] }
         }
       } },
       { "platform": "Console", "bestSettings": ["FPS: 60","Controller Aim Assist: On"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "Volt SMG", "secondary": "Wingman", "attachments": ["Laser Sight"], "perks": ["Quick Swap", "Stim Rush"] },
-          "balanced": { "primary": "Flatline", "secondary": "RE-45", "attachments": ["Barrel Stabilizer"], "perks": ["Mobility", "Fast Heal"] },
-          "defensive": { "primary": "Longbow DMR", "secondary": "P2020", "attachments": ["4x Optic"], "perks": ["Cover Mastery", "Shield Regen"] }
+          "aggressive": { "legend": "Octane", "primary": "Volt SMG", "secondary": "Wingman", "grenades": "Arc Star x2", "healing": "Med Kit x2, Syringe x4", "shields": "Shield Battery x2, Shield Cell x4", "armor": "Purple Body Shield", "attachments": ["Laser Sight", "1x Holo", "Extended Energy Mag"], "perks": ["Quick Swap", "Stim Rush"] },
+          "balanced": { "legend": "Lifeline", "primary": "Flatline", "secondary": "RE-45", "grenades": "Frag Grenade x2", "healing": "Med Kit x2, Syringe x6", "shields": "Shield Battery x2, Shield Cell x4", "armor": "Purple Body Shield", "attachments": ["Barrel Stabilizer", "2x Bruiser", "Extended Heavy Mag"], "perks": ["Mobility", "Fast Heal"] },
+          "defensive": { "legend": "Caustic", "primary": "Longbow DMR", "secondary": "P2020", "grenades": "Thermite x2", "healing": "Med Kit x3, Syringe x4", "shields": "Shield Battery x3, Shield Cell x4", "armor": "Red Evo Shield", "attachments": ["4x-8x Variable", "Skullpiercer", "Extended Sniper Mag"], "perks": ["Cover Mastery", "Shield Regen"] }
         }
       } }
     ] },
     { "id": "call-of-duty-warzone", "name": "Call of Duty: Warzone", "platforms": [
       { "platform": "PC", "bestSettings": ["FPS: Unlocked", "FOV: 100"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "Fennec 45", "secondary": "Kastov-74U", "attachments": ["VLK Optic", "Merc Foregrip", "60-Round Mag"], "perks": ["Double Time", "High Alert"] },
-          "balanced": { "primary": "TAQ-56", "secondary": "VEL 46", "attachments": ["SZ Holotherm", "Commando Foregrip"], "perks": ["Overkill", "Fast Hands"] },
-          "defensive": { "primary": "RPK", "secondary": "P890", "attachments": ["Aim OP-V4", "Lockgrip Precision"], "perks": ["Battle Hardened", "Bomb Squad"] }
+          "aggressive": { "primary": "Fennec 45", "secondary": "Kastov-74U", "tactical": "Stun Grenade", "lethal": "Semtex", "fieldUpgrade": "Dead Silence", "attachments": ["VLK Optic", "Merc Foregrip", "60-Round Mag"], "perks": ["Double Time", "Overkill", "High Alert", "Quick Fix"] },
+          "balanced": { "primary": "TAQ-56", "secondary": "VEL 46", "tactical": "Heartbeat Sensor", "lethal": "Frag Grenade", "fieldUpgrade": "Trophy System", "attachments": ["SZ Holotherm", "Commando Foregrip", "50-Round Mag"], "perks": ["Overkill", "Fast Hands", "Tempered", "Ghost"] },
+          "defensive": { "primary": "RPK", "secondary": "P890", "tactical": "Smoke Grenade", "lethal": "Claymore", "fieldUpgrade": "Munitions Box", "attachments": ["Aim OP-V4", "Lockgrip Precision", "75-Round Drum"], "perks": ["Battle Hardened", "Bomb Squad", "Ghost", "High Alert"] }
         }
       } },
       { "platform": "Console", "bestSettings": ["Aim Assist: On", "Graphics: Balanced"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "Lachmann Sub", "secondary": "FSS Hurricane", "attachments": ["Laser", "50-Round Drum"], "perks": ["Double Time", "Resupply"] },
-          "balanced": { "primary": "M4", "secondary": "X13 Auto", "attachments": ["Red Dot", "Suppressor"], "perks": ["Overkill", "Fast Hands"] },
-          "defensive": { "primary": "RAAL MG", "secondary": "Basilisk", "attachments": ["Thermal Optic", "Heavy Stock"], "perks": ["Battle Hardened", "Bomb Squad"] }
+          "aggressive": { "primary": "Lachmann Sub", "secondary": "FSS Hurricane", "tactical": "Stun Grenade", "lethal": "Throwing Knife", "fieldUpgrade": "Dead Silence", "attachments": ["Laser", "50-Round Drum", "Suppressor"], "perks": ["Double Time", "Overkill", "Resupply", "Quick Fix"] },
+          "balanced": { "primary": "M4", "secondary": "X13 Auto", "tactical": "Heartbeat Sensor", "lethal": "Frag Grenade", "fieldUpgrade": "Trophy System", "attachments": ["Red Dot", "Suppressor", "60-Round Mag"], "perks": ["Overkill", "Fast Hands", "Tempered", "Ghost"] },
+          "defensive": { "primary": "RAAL MG", "secondary": "Basilisk", "tactical": "Smoke Grenade", "lethal": "Proximity Mine", "fieldUpgrade": "Munitions Box", "attachments": ["Thermal Optic", "Heavy Stock", "Bipod"], "perks": ["Battle Hardened", "Bomb Squad", "Ghost", "High Alert"] }
         }
       } }
     ] },
@@ -60,9 +60,9 @@
     { "id": "overwatch-2", "name": "Overwatch 2", "platforms": [
       { "platform": "PC", "bestSettings": ["Input: Controller/KB&M as preferred", "Graphics: Balanced"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "Genji", "secondary": "Tracer", "attachments": ["Dash Reset"], "perks": ["Flank Mastery", "Ult Charge"] },
-          "balanced": { "primary": "Sojourn", "secondary": "Soldier: 76", "attachments": ["Railgun"], "perks": ["Mobility", "Consistent DPS"] },
-          "defensive": { "primary": "Sigma", "secondary": "Baptiste", "attachments": ["Barrier"], "perks": ["Area Denial", "Self Sustain"] }
+          "aggressive": { "hero": "Genji", "role": "DPS", "primaryFire": "Shuriken (Left/Right Click)", "abilities": ["Swift Strike", "Deflect", "Cyber-Agility"], "ultimate": "Dragonblade", "playstyle": "Flank, Dash Reset Combos", "counters": ["Winston", "Moira", "Symmetra"], "perks": ["Flank Mastery", "Ult Charge"] },
+          "balanced": { "hero": "Sojourn", "role": "DPS", "primaryFire": "Railgun (Auto + Charged Shot)", "abilities": ["Disruptor Shot", "Power Slide"], "ultimate": "Overclock", "playstyle": "Mid-range poke, High-ground control", "counters": ["Widowmaker", "Hanzo", "Ashe"], "perks": ["Mobility", "Consistent DPS"] },
+          "defensive": { "hero": "Sigma", "role": "Tank", "primaryFire": "Hyperspheres", "abilities": ["Kinetic Grasp", "Experimental Barrier", "Accretion"], "ultimate": "Gravitic Flux", "playstyle": "Area denial, Peel for team", "counters": ["Reaper", "Symmetra", "Doomfist"], "perks": ["Area Denial", "Self Sustain"] }
         }
       } }
     ] },
@@ -72,9 +72,9 @@
     { "id": "rainbow-six-siege", "name": "Rainbow Six Siege", "platforms": [
       { "platform": "PC", "bestSettings": ["Frame rate: 60+", "ADS sensitivity lower"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "Ash", "secondary": "M45 MEUSOC", "attachments": ["Compensator", "ACOG"], "perks": ["Breaching Rounds", "Speed"] },
-          "balanced": { "primary": "Zofia", "secondary": "RG15", "attachments": ["Flash Hider", "2x Scope"], "perks": ["Versatility", "Gadget Utility"] },
-          "defensive": { "primary": "Smoke", "secondary": "SMG-11", "attachments": ["Suppressor", "1.5x Scope"], "perks": ["Area Denial", "Toxic Gas"] }
+          "aggressive": { "operator": "Ash", "primary": "R4-C Assault Rifle", "secondary": "M45 MEUSOC Pistol", "gadget": "Breaching Rounds (x2)", "utility": "Stun Grenades + Breach Charge", "attachments": ["Compensator", "ACOG", "Vertical Grip"], "perks": ["3-Speed", "Breaching", "Entry Fragger"] },
+          "balanced": { "operator": "Zofia", "primary": "M762 Assault Rifle", "secondary": "RG15 Pistol", "gadget": "KS79 Lifeline (Impact + Concussion)", "utility": "Breach Charge + Claymore", "attachments": ["Flash Hider", "2x Scope", "Angled Grip"], "perks": ["2-Speed", "Versatile", "Soft Breach"] },
+          "defensive": { "operator": "Smoke", "primary": "M590A1 Shotgun", "secondary": "SMG-11", "gadget": "Remote Gas Grenades (x3)", "utility": "Barbed Wire + Impact Grenades", "attachments": ["Suppressor", "1.5x Scope", "Vertical Grip"], "perks": ["2-Speed", "Area Denial", "Site Setup"] }
         }
       } }
     ] },
@@ -83,9 +83,9 @@
     { "id": "battlefield-6", "name": "Battlefield 6", "platforms": [
       { "platform": "PC", "bestSettings": ["Frame rate priority: High", "FOV: 90-100"], "recommendedLoadout": {
         "variants": {
-          "aggressive": { "primary": "K30 SMG", "secondary": "G57", "attachments": ["Extended Mag", "Laser Sight"], "perks": ["Fast Sprint", "Quick Reload"] },
-          "balanced": { "primary": "SFAR-M GL", "secondary": "M44", "attachments": ["Compensator", "2x Scope"], "perks": ["Versatility", "Gadget Utility"] },
-          "defensive": { "primary": "SVK DMR", "secondary": "MCS-880", "attachments": ["Suppressor", "4x Scope"], "perks": ["Area Control", "Extra Armor"] }
+          "aggressive": { "class": "Assault", "primary": "K30 SMG", "secondary": "G57 Pistol", "gadget1": "Med Pen", "gadget2": "Smoke Grenade Launcher", "equipment": "Frag Grenade", "throwables": "2x Frags", "attachments": ["Extended Mag", "Laser Sight", "Reflex Sight"], "perks": ["Fast Sprint", "Quick Reload"] },
+          "balanced": { "class": "Engineer", "primary": "SFAR-M GL", "secondary": "M44 Revolver", "gadget1": "Repair Tool", "gadget2": "Anti-Tank Mine", "equipment": "Ammo Crate", "throwables": "2x C5 Explosives", "attachments": ["Compensator", "2x Scope", "Underbarrel GL"], "perks": ["Versatility", "Gadget Utility"] },
+          "defensive": { "class": "Recon", "primary": "SVK DMR", "secondary": "MCS-880 Shotgun", "gadget1": "Motion Sensor", "gadget2": "Spawn Beacon", "equipment": "Claymore", "throwables": "Smoke Grenade", "attachments": ["Suppressor", "4x Scope", "Extended Mag"], "perks": ["Area Control", "Extra Armor"] }
         }
       } }
     ] },
@@ -103,7 +103,7 @@
     { "id":"fall-guys","name":"Fall Guys","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Low-Latency","Input: Controller optional"],"recommendedLoadout":{"primary":"N/A","secondary":"N/A","attachments":[],"perks":["Movement practice"]}} ] },
     { "id":"rust","name":"Rust","platforms":[{"platform":"PC","bestSettings":["Graphics: Balanced","Input: Mouse/Keyboard"],"recommendedLoadout":{"primary":"Bolt/Assault","secondary":"SMG","attachments":[],"perks":["Survival"]}} ] },
     { "id":"ark","name":"ARK: Survival","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced","Input: Controller optional"],"recommendedLoadout":{"primary":"Rifle","secondary":"Melee","attachments":[],"perks":["Taming knowledge"]}} ] },
-    { "id":"destiny-2","name":"Destiny 2","platforms":[{"platform":"PC/Console","bestSettings":["FPS: 60+","Graphics: Balanced"],"recommendedLoadout":{"primary":"Auto Rifle","secondary":"Sniper","attachments":[],"perks":["Cooldown management"]}} ] },
+    { "id":"destiny-2","name":"Destiny 2","platforms":[{"platform":"PC/Console","bestSettings":["FPS: 60+","Graphics: Balanced"],"recommendedLoadout":{"variants":{"aggressive":{"class":"Hunter","subclass":"Arc Strider","kinetic":"Reckless Oracle (Auto Rifle)","energy":"Ikelos SMG (Solar)","power":"Falling Guillotine (Void Sword)","armor":{"helmet":"Wormhusk Crown","gauntlets":"Ophidia Spathe","chest":"Dragon's Shadow","legs":"Stompees","classItem":"Any"},"mods":["Charged with Light","High Energy Fire"],"perks":["Mobility Focus","Quick Dodge"]},"balanced":{"class":"Warlock","subclass":"Voidwalker","kinetic":"Fatebringer (Hand Cannon)","energy":"Gnawing Hunger (Void Auto Rifle)","power":"Sleeper Simulant (Linear Fusion)","armor":{"helmet":"Nezarec's Sin","gauntlets":"Contraverse Hold","chest":"Any","legs":"Transversive Steps","classItem":"Any"},"mods":["Elemental Charge","Font of Might"],"perks":["Ability Regeneration","Balanced Stats"]},"defensive":{"class":"Titan","subclass":"Sentinel","kinetic":"Night Watch (Scout Rifle)","energy":"Le Monarque (Bow)","power":"Anarchy (Grenade Launcher)","armor":{"helmet":"Helm of Saint-14","gauntlets":"Ursas Furiosa","chest":"Heart of Inmost Light","legs":"Dunemarchers","classItem":"Any"},"mods":["Protective Light","Concussive Dampener"],"perks":["Resilience Focus","Overshield"]}}} ] },
     { "id":"warframe","name":"Warframe","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: Balanced","Input: Controller supported"],"recommendedLoadout":{"primary":"Primary Weapon","secondary":"Sidearm","attachments":[],"perks":["Mod optimization"]}} ] },
     { "id":"monster-hunter-world","name":"Monster Hunter: World","platforms":[{"platform":"PC/Console","bestSettings":["Graphics: High","Input: Controller recommended"],"recommendedLoadout":{"primary":"Weapon-specific","secondary":"N/A","attachments":[],"perks":["Elemental optimization"]}} ] },
     { "id":"halo-infinite","name":"Halo Infinite","platforms":[{"platform":"PC/Console","bestSettings":["FPS: 60+","Input: Controller recommended"],"recommendedLoadout":{"primary":"Battle Rifle/BR","secondary":"Sidekick","attachments":[],"perks":["Aim practice"]}} ] },
@@ -157,9 +157,9 @@
       { "platform":"Switch","bestSettings":["Graphics: Performance"], "recommendedLoadout": { "primary":"Survivor loadout","secondary":"—","attachments":[], "perks":["Camper Awareness"] } }
     ] },
     { "id":"division-2","name":"The Division 2","platforms":[
-      { "platform":"PC","bestSettings":["Graphics: High","FPS Cap: 144"], "recommendedLoadout": { "primary":"Assault Rifle","secondary":"SMG","attachments":["Suppressor"], "perks":["Skill Haste"] } },
-      { "platform":"PlayStation","bestSettings":["Controller: Aim Assist On"], "recommendedLoadout": { "primary":"Assault Rifle","secondary":"SMG","attachments":[], "perks":["Survivability"] } },
-      { "platform":"Xbox","bestSettings":["Controller: Aim Assist On"], "recommendedLoadout": { "primary":"Assault Rifle","secondary":"SMG","attachments":[], "perks":["Stability"] } }
+      { "platform":"PC","bestSettings":["Graphics: High","FPS Cap: 144"], "recommendedLoadout": {"variants":{"aggressive":{"primary":"FAMAS 2010 (AR)","secondary":"Vector SBR 9mm (SMG)","sidearm":"D50 (Pistol)","specialization":"Gunner","skills":["Striker Drone","Reviver Hive"],"gearSet":"Striker's Battlegear (4pc)","armor":{"mask":"Striker","backpack":"Striker","vest":"Striker","gloves":"Striker","holster":"Improvised","kneepads":"Improvised"},"attributes":["Weapon Damage","Critical Hit Chance","Critical Hit Damage"],"perks":["Skill Haste","Armor Regen"]},"balanced":{"primary":"M4A1 (AR)","secondary":"Police M4 (AR)","sidearm":"X-45 (Pistol)","specialization":"Demolitionist","skills":["Assault Turret","Chem Launcher (Healing)"],"gearSet":"Ongoing Directive (4pc)","armor":{"mask":"Ongoing","backpack":"Ongoing","vest":"Ongoing","gloves":"Ongoing","holster":"Improvised","kneepads":"Improvised"},"attributes":["Skill Power","Weapon Damage","Health"],"perks":["Skill Haste","Team Support"]},"defensive":{"primary":"Military Mk17 (Rifle)","secondary":"Tactical Mk16 (AR)","sidearm":"93R (Pistol)","specialization":"Survivalist","skills":["Defender Drone","Chem Launcher (Healing)"],"gearSet":"True Patriot (4pc)","armor":{"mask":"True Patriot","backpack":"True Patriot","vest":"True Patriot","gloves":"True Patriot","holster":"Improvised","kneepads":"Improvised"},"attributes":["Armor","Health","Hazard Protection"],"perks":["Survivability","Team Buff"]}}} },
+      { "platform":"PlayStation","bestSettings":["Controller: Aim Assist On"], "recommendedLoadout": {"variants":{"aggressive":{"primary":"AK-M (AR)","secondary":"MPX (SMG)","sidearm":"M45A1 (Pistol)","specialization":"Gunner","skills":["Striker Drone","Reviver Hive"],"gearSet":"Striker's Battlegear (4pc)","attributes":["Weapon Damage","CHC","CHD"],"perks":["Survivability","Armor Regen"]},"balanced":{"primary":"G36 (AR)","secondary":"Police M4 (AR)","sidearm":"X-45 (Pistol)","specialization":"Demolitionist","skills":["Assault Turret","Healing Chem"],"gearSet":"Ongoing Directive (4pc)","attributes":["Skill Power","Weapon Damage"],"perks":["Survivability","Team Support"]},"defensive":{"primary":"Classic M1A (Rifle)","secondary":"M4A1 (AR)","sidearm":"93R (Pistol)","specialization":"Survivalist","skills":["Defender Drone","Healing Chem"],"gearSet":"True Patriot (4pc)","attributes":["Armor","Health"],"perks":["Survivability","Team Buff"]}}} },
+      { "platform":"Xbox","bestSettings":["Controller: Aim Assist On"], "recommendedLoadout": {"variants":{"aggressive":{"primary":"FAMAS (AR)","secondary":"Chatterbox (SMG)","sidearm":"D50 (Pistol)","specialization":"Gunner","skills":["Striker Drone","Reviver Hive"],"gearSet":"Striker's Battlegear (4pc)","attributes":["Weapon Damage","CHC","CHD"],"perks":["Stability","Armor Regen"]},"balanced":{"primary":"Police M4 (AR)","secondary":"MP5 (SMG)","sidearm":"X-45 (Pistol)","specialization":"Demolitionist","skills":["Assault Turret","Healing Chem"],"gearSet":"Ongoing Directive (4pc)","attributes":["Skill Power","Weapon Damage"],"perks":["Stability","Team Support"]},"defensive":{"primary":"Mk17 (Rifle)","secondary":"M4A1 (AR)","sidearm":"Liberty (Pistol)","specialization":"Survivalist","skills":["Defender Drone","Healing Chem"],"gearSet":"True Patriot (4pc)","attributes":["Armor","Health"],"perks":["Stability","Team Buff"]}}} }
     ] },
     { "id":"splitgate","name":"Splitgate","platforms":[
       { "platform":"PC","bestSettings":["FPS: 144+","FOV: 100"], "recommendedLoadout": { "primary":"Assault","secondary":"Pistol","attachments":[], "perks":["Portal Mastery"] } },
