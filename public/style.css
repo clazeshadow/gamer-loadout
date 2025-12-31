@@ -85,6 +85,25 @@ input,textarea{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(25
 .game-detail h3{margin-top:0}
 .game-detail .setting{margin-bottom:6px}
 
+/* Control Settings */
+.control-section{
+	background:rgba(53,208,84,0.04);
+	border-left:3px solid var(--accent);
+	padding:10px 14px;
+	margin-top:10px;
+	border-radius:6px;
+}
+.control-section strong{
+	display:block;
+	margin-bottom:8px;
+	font-size:14px;
+}
+.control-section .setting{
+	font-size:13px;
+	margin-bottom:4px;
+	color:#d0dde8;
+}
+
 /* Tighter container for header to reduce visual clutter */
 .site-header .container{max-width:1100px;padding:0}
 

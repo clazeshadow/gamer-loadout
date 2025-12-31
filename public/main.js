@@ -270,6 +270,25 @@ async function initGames(){
     platformWrapper.appendChild(pfLabel)
     platformWrapper.appendChild(pfSelect)
     wrap.appendChild(platformWrapper)
+    
+    // input type selector
+    const inputWrapper = document.createElement('div')
+    inputWrapper.style.marginBottom = '8px'
+    const inputLabel = document.createElement('label')
+    inputLabel.textContent = 'Input Type'
+    inputLabel.style.display = 'block'
+    const inputSelect = document.createElement('select')
+    inputSelect.style.marginTop = '6px'
+    const inputOptions = [['all', 'All Settings'], ['keyboard', 'Keyboard & Mouse'], ['controller', 'Controller']]
+    inputOptions.forEach(([val, text]) => {
+      const o = document.createElement('option')
+      o.value = val
+      o.textContent = text
+      inputSelect.appendChild(o)
+    })
+    inputWrapper.appendChild(inputLabel)
+    inputWrapper.appendChild(inputSelect)
+    wrap.appendChild(inputWrapper)
 
     const settingsTitle = document.createElement('h4')
     settingsTitle.textContent = 'Recommended Settings'
@@ -293,7 +312,7 @@ async function initGames(){
     actions.appendChild(loadBtn)
     wrap.appendChild(actions)
 
-    function renderPlatform(pf){
+    function renderPlatform(pf, inputType = 'all'){
       settingsContainer.innerHTML = ''
       (pf.bestSettings || []).forEach(s => {
         const div = document.createElement('div')
@@ -301,6 +320,121 @@ async function initGames(){
         div.textContent = s
         settingsContainer.appendChild(div)
       })
+      
+      // Add control settings section with input type filtering
+      if (pf.controlSettings) {
+        const ctrlTitle = document.createElement('h4')
+        ctrlTitle.textContent = 'Control Settings'
+        ctrlTitle.style.marginTop = '16px'
+        settingsContainer.appendChild(ctrlTitle)
+        
+        const cs = pf.controlSettings
+        
+        // Show keyboard/mouse settings
+        if ((inputType === 'all' || inputType === 'keyboard') && (cs.mouseSensitivity || cs.dpi || cs.keybinds)) {
+          const kbSection = document.createElement('div')
+          kbSection.className = 'control-section'
+          kbSection.style.marginBottom = '12px'
+          kbSection.innerHTML = '<strong style="color: var(--primary)">⌨️ Keyboard & Mouse</strong>'
+          
+          if (cs.mouseSensitivity) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>Sensitivity:</strong> ${cs.mouseSensitivity}`
+            kbSection.appendChild(div)
+          }
+          if (cs.dpi) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>DPI:</strong> ${cs.dpi}`
+            kbSection.appendChild(div)
+          }
+          if (cs.adsMultiplier || cs.adsSensitivity) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>ADS Sens:</strong> ${cs.adsMultiplier || cs.adsSensitivity}`
+            kbSection.appendChild(div)
+          }
+          if (cs.keybinds) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = '<strong>Key Binds:</strong>'
+            const list = document.createElement('ul')
+            list.style.fontSize = '13px'
+            list.style.marginTop = '4px'
+            Object.entries(cs.keybinds).slice(0, 5).forEach(([key, val]) => {
+              const li = document.createElement('li')
+              li.textContent = `${key}: ${val}`
+              list.appendChild(li)
+            })
+            div.appendChild(list)
+            kbSection.appendChild(div)
+          }
+          if (cs.recommendations) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = '<strong>💡 Tips:</strong> ' + cs.recommendations.slice(0, 2).join(', ')
+            kbSection.appendChild(div)
+          }
+          settingsContainer.appendChild(kbSection)
+        }
+        
+        // Show controller settings
+        if ((inputType === 'all' || inputType === 'controller') && cs.controller) {
+          const ctrlSection = document.createElement('div')
+          ctrlSection.className = 'control-section'
+          ctrlSection.style.marginBottom = '12px'
+          ctrlSection.innerHTML = '<strong style="color: var(--primary)">🎮 Controller</strong>'
+          
+          const ctrl = cs.controller
+          if (ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>Look Sensitivity:</strong> ${ctrl.lookSensitivity || ctrl.lookSensitivityX || ctrl.sensitivity}`
+            ctrlSection.appendChild(div)
+          }
+          if (ctrl.adsMultiplier) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>ADS Multiplier:</strong> ${ctrl.adsMultiplier}`
+            ctrlSection.appendChild(div)
+          }
+          if (ctrl.deadzone) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>Deadzone:</strong> ${typeof ctrl.deadzone === 'object' ? JSON.stringify(ctrl.deadzone) : ctrl.deadzone}`
+            ctrlSection.appendChild(div)
+          }
+          if (ctrl.buttonLayout) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>Button Layout:</strong> ${ctrl.buttonLayout}`
+            ctrlSection.appendChild(div)
+          }
+          settingsContainer.appendChild(ctrlSection)
+        }
+        
+        // Show general controller settings if no nested controller object
+        if ((inputType === 'all' || inputType === 'controller') && !cs.controller && (cs.lookSensitivityX || cs.horizontalSensitivity)) {
+          const ctrlSection = document.createElement('div')
+          ctrlSection.className = 'control-section'
+          ctrlSection.innerHTML = '<strong style="color: var(--primary)">🎮 Controller</strong>'
+          
+          if (cs.lookSensitivityX) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>Sensitivity:</strong> X: ${cs.lookSensitivityX}, Y: ${cs.lookSensitivityY || cs.lookSensitivityX}`
+            ctrlSection.appendChild(div)
+          }
+          if (cs.buttonLayout) {
+            const div = document.createElement('div')
+            div.className = 'setting'
+            div.innerHTML = `<strong>Button Layout:</strong> ${cs.buttonLayout}`
+            ctrlSection.appendChild(div)
+          }
+          settingsContainer.appendChild(ctrlSection)
+        }
+      }
 
       rl.innerHTML = ''
       const primary = document.createElement('p')
@@ -323,8 +457,16 @@ async function initGames(){
 
     pfSelect.addEventListener('change', ()=>{
       const sel = pfSelect.value
+      const inputType = inputSelect.value
       const pf = (g.platforms || []).find(x => (typeof x === 'string') ? x === sel : (x.platform === sel))
-      if (pf) renderPlatform((typeof pf === 'string') ? { platform: pf, recommendedLoadout: {} } : pf)
+      if (pf) renderPlatform((typeof pf === 'string') ? { platform: pf, recommendedLoadout: {} } : pf, inputType)
+    })
+    
+    inputSelect.addEventListener('change', ()=>{
+      const sel = pfSelect.value
+      const inputType = inputSelect.value
+      const pf = (g.platforms || []).find(x => (typeof x === 'string') ? x === sel : (x.platform === sel))
+      if (pf) renderPlatform((typeof pf === 'string') ? { platform: pf, recommendedLoadout: {} } : pf, inputType)
     })
 
     loadBtn.addEventListener('click', ()=>{
@@ -334,7 +476,7 @@ async function initGames(){
 
     const initial = (g.platforms || [])[0]
     if (initial){
-      renderPlatform(initial)
+      renderPlatform(initial, 'all')
     }
 
     detailEl.appendChild(wrap)
