@@ -220,11 +220,43 @@ function initSettingsGenerator(){
     const game = dataSrc.games.find(g => g.id === gameId)
     settingsPlatformSelect.innerHTML = '<option value="">Select a platform...</option>'
     if (game && game.platforms) {
-      game.platforms.forEach(pf => {
+      const rawPlatforms = game.platforms.map(p => (typeof p === 'string') ? p : (p.platform || ''))
+      
+      // Normalize and infer common console platforms
+      const set = new Set()
+      rawPlatforms.forEach(praw => {
+        const p = (praw || '').toString().trim().toLowerCase()
+        if (p.includes('pc')) set.add('PC')
+        if (p.includes('playstation')) set.add('PlayStation')
+        if (p.includes('xbox')) set.add('Xbox')
+        if (p.includes('switch')){
+          set.add('Switch')
+          set.add('Nintendo Switch 2')
+        }
+        if (p.includes('console')) {
+          set.add('PlayStation')
+          set.add('Xbox')
+          set.add('Switch')
+          set.add('Nintendo Switch 2')
+        }
+        if (!p.includes('pc') && !p.includes('playstation') && !p.includes('xbox') && !p.includes('switch') && !p.includes('console')){
+          if (praw && praw.toString().trim()) set.add(praw.toString().trim())
+        }
+      })
+
+      // Prefer ordering: PC, PlayStation, Xbox, Switch, Nintendo Switch 2
+      const order = ['PC','PlayStation','Xbox','Switch','Nintendo Switch 2']
+      const final = []
+      // Ensure Xbox and Nintendo Switch 2 are available as options
+      if (!set.has('Xbox')) set.add('Xbox')
+      if (!set.has('Nintendo Switch 2')) set.add('Nintendo Switch 2')
+      order.forEach(k => { if (set.has(k)) final.push(k); set.delete(k) })
+      Array.from(set).forEach(x => final.push(x))
+
+      final.forEach(p => {
         const o = document.createElement('option')
-        const val = (typeof pf === 'string') ? pf : (pf.platform || '')
-        o.value = val
-        o.textContent = val
+        o.value = p
+        o.textContent = p
         settingsPlatformSelect.appendChild(o)
       })
     }
