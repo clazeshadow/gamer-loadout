@@ -268,6 +268,8 @@ function initSettingsGenerator(){
     const platform = settingsPlatformSelect.value
     const inputType = settingsInputTypeSelect.value
     
+    console.log('Settings generator clicked:', { gameId, platform, inputType })
+    
     if (!gameId || !platform) {
       alert('Please select a game and platform')
       return
@@ -275,6 +277,7 @@ function initSettingsGenerator(){
 
     const dataSrc = window.GAMES_DATA || { games: [] }
     const game = dataSrc.games.find(g => g.id === gameId)
+    console.log('Found game:', game)
     if (!game) return
 
     // Find platform with fuzzy matching
@@ -296,6 +299,8 @@ function initSettingsGenerator(){
       return false
     })
     
+    console.log('Matched platform:', pf)
+    
     // Fallback to first platform
     if (!pf) pf = game.platforms[0]
     
@@ -310,6 +315,7 @@ function initSettingsGenerator(){
       return
     }
 
+    console.log('Calling renderControlSettings with:', gameName, platform, pf.controlSettings)
     renderControlSettings(game.name, platform, pf.controlSettings, inputType)
   })
 
@@ -324,8 +330,13 @@ function initSettingsGenerator(){
 }
 
 function renderControlSettings(gameName, platform, cs, inputType = 'all'){
+  console.log('renderControlSettings called:', { gameName, platform, cs, inputType })
   const stack = document.getElementById('settings-stack')
-  if (!stack) return
+  console.log('Stack element:', stack)
+  if (!stack) {
+    console.error('settings-stack element not found!')
+    return
+  }
   
   stack.innerHTML = ''
   
