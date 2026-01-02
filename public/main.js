@@ -93,6 +93,15 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('page-active'))
   const el = document.getElementById(id)
   if (el) el.classList.add('page-active')
+  
+  // Track page visit
+  trackVisit(id);
+  
+  // Load admin stats if navigating to admin page
+  if (id === 'admin') {
+    loadAdminStats();
+  }
+  
   // If navigating away from home, clear the loadout stack
   if (id !== 'home') {
     const result = document.getElementById('result')
@@ -143,6 +152,9 @@ function initHome(){
     const platform = document.getElementById('platform') ? document.getElementById('platform').value : null
     btn.disabled = true
     btn.textContent = 'Generating...'
+    
+    // Track game analytics
+    trackGame(gameId, platform);
 
     setTimeout(()=>{
       // prefer platform-specific data from GAMES_DATA
@@ -1263,3 +1275,91 @@ function hideUserProfile() {
   document.getElementById('signup-container').style.display = 'none';
   document.getElementById('forgot-container').style.display = 'none';
 }
+
+// Admin Dashboard
+async function loadAdminStats() {
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    document.getElementById('admin-access-denied').style.display = 'block';
+    document.getElementById('admin-content').style.display = 'none';
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/admin/stats', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.status === 403) {
+      document.getElementById('admin-access-denied').style.display = 'block';
+      document.getElementById('admin-content').style.display = 'none';
+      return;
+    }
+
+    const data = await response.json();
+    if (data.success) {
+      document.getElementById('admin-access-denied').style.display = 'none';
+      document.getElementById('admin-content').style.display = 'block';
+
+      // Update visit stats
+      document.getElementById('stat-visits-total').textContent = data.stats.visits.total.toLocaleString();
+      document.getElementById('stat-visits-24h').textContent = data.stats.visits.last24h.toLocaleString();
+      document.getElementById('stat-visits-7d').textContent = data.stats.visits.last7d.toLocaleString();
+
+      // Update user stats
+      document.getElementById('stat-users-total').textContent = data.stats.users.total.toLocaleString();
+      document.getElementById('stat-users-subscribed').textContent = data.stats.users.subscribed.toLocaleString();
+      document.getElementById('stat-users-free').textContent = data.stats.users.free.toLocaleString();
+
+      // Display popular games
+      const gamesHtml = data.stats.popularGames.map(game => `
+        <div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          <span>${game.gameName}${game.platform ? ` (${game.platform})` : ''}</span>
+          <span style="color:var(--accent);font-weight:bold">${game.count} views</span>
+        </div>
+      `).join('');
+      document.getElementById('popular-games-list').innerHTML = gamesHtml || '<p style="color:var(--muted)">No data yet</p>';
+
+      // Display subscribed users
+      const usersHtml = data.stats.subscribedUsers.map(user => `
+        <div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          <span>${user.email}</span>
+          <span style="color:#4ade80;text-transform:capitalize">${user.subscription}</span>
+        </div>
+      `).join('');
+      document.getElementById('subscribed-users-list').innerHTML = usersHtml || '<p style="color:var(--muted)">No subscriptions yet</p>';
+    }
+  } catch (error) {
+    console.error('Failed to load admin stats:', error);
+    document.getElementById('admin-access-denied').style.display = 'block';
+    document.getElementById('admin-content').style.display = 'none';
+  }
+}
+
+// Track analytics
+async function trackVisit(page) {
+  try {
+    await fetch('/api/analytics/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'visit', data: { page } })
+    });
+  } catch (error) {
+    console.error('Failed to track visit:', error);
+  }
+}
+
+async function trackGame(gameName, platform) {
+  try {
+    await fetch('/api/analytics/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'game', data: { gameName, platform } })
+    });
+  } catch (error) {
+    console.error('Failed to track game:', error);
+  }
+}
+

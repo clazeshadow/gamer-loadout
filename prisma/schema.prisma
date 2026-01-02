@@ -15,10 +15,30 @@ model User {
   email String  @unique
   password String
   tier  String  @default("free") // "free" or "paid"
+  subscription String? // "x-elite" or "x-ascended"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   resetToken String?
   resetTokenExpiry DateTime?
 
   @@map("users")
+}
+
+model SiteVisit {
+  id Int @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  page String?
+  
+  @@map("site_visits")
+}
+
+model GamePopularity {
+  id Int @id @default(autoincrement())
+  gameName String
+  platform String?
+  count Int @default(1)
+  lastAccessed DateTime @default(now())
+  
+  @@unique([gameName, platform])
+  @@map("game_popularity")
 }
