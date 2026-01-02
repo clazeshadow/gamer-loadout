@@ -1149,7 +1149,8 @@ function initAuth() {
           status.style.color = '#ff4444';
         }
       } catch (error) {
-        status.textContent = 'Network error. Please try again.';
+        console.error('Registration error:', error);
+        status.textContent = `Network error: ${error.message}. Check console for details.`;
         status.style.color = '#ff4444';
       }
     });
