@@ -1,5 +1,7 @@
-import { sql } from '@vercel/postgres';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+
+const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -18,27 +20,31 @@ export default async function handler(req, res) {
 
   try {
     // Find user with valid reset token
-    const result = await sql`
-      SELECT id, email FROM users
-      WHERE reset_token = ${token}
-      AND reset_token_expiry > NOW()
-    `;
+    const user = await prisma.user.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpiry: {
+          gt: new Date() // Token must not be expired
+        }
+      }
+    });
 
-    if (result.rows.length === 0) {
+    if (!user) {
       return res.status(400).json({ error: 'Invalid or expired reset token' });
     }
-
-    const user = result.rows[0];
 
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Update password and clear reset token
-    await sql`
-      UPDATE users
-      SET password = ${hashedPassword}, reset_token = NULL, reset_token_expiry = NULL
-      WHERE id = ${user.id}
-    `;
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpiry: null
+      }
+    });
 
     return res.status(200).json({ 
       success: true, 
@@ -47,5 +53,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Reset password error:', error);
     return res.status(500).json({ error: 'Password reset failed' });
+  } finally {
+    await prisma.$disconnect();
   }
 }

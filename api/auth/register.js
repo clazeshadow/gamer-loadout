@@ -1,7 +1,8 @@
-import { sql } from '@vercel/postgres';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
 export default async function handler(req, res) {
@@ -28,11 +29,11 @@ export default async function handler(req, res) {
 
   try {
     // Check if user already exists
-    const existingUser = await sql`
-      SELECT id FROM users WHERE email = ${email}
-    `;
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
 
-    if (existingUser.rows.length > 0) {
+    if (existingUser) {
       return res.status(409).json({ error: 'Email already registered' });
     }
 
@@ -40,13 +41,13 @@ export default async function handler(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user with free tier
-    const result = await sql`
-      INSERT INTO users (email, password, tier, created_at)
-      VALUES (${email}, ${hashedPassword}, 'free', NOW())
-      RETURNING id, email, tier, created_at
-    `;
-
-    const user = result.rows[0];
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        tier: 'free'
+      }
+    });
 
     // Generate JWT token
     const token = jwt.sign(
@@ -61,12 +62,15 @@ export default async function handler(req, res) {
         id: user.id,
         email: user.email,
         tier: user.tier,
-        createdAt: user.created_at
+        createdAt: user.createdAt
       },
       token
     });
   } catch (error) {
     console.error('Registration error:', error);
     return res.status(500).json({ error: 'Registration failed' });
+  } finally {
+    await prisma.$disconnect();
   }
 }
+

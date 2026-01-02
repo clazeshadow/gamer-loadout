@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
-import { sql } from '@vercel/postgres';
+import { PrismaClient } from '@prisma/client';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
+const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -20,17 +21,19 @@ export default async function handler(req, res) {
     const decoded = jwt.verify(token, JWT_SECRET);
 
     // Get fresh user data
-    const result = await sql`
-      SELECT id, email, tier, created_at
-      FROM users
-      WHERE id = ${decoded.userId}
-    `;
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: {
+        id: true,
+        email: true,
+        tier: true,
+        createdAt: true
+      }
+    });
 
-    if (result.rows.length === 0) {
+    if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    const user = result.rows[0];
 
     return res.status(200).json({
       success: true,
@@ -38,11 +41,13 @@ export default async function handler(req, res) {
         id: user.id,
         email: user.email,
         tier: user.tier,
-        createdAt: user.created_at
+        createdAt: user.createdAt
       }
     });
   } catch (error) {
     console.error('Get user error:', error);
     return res.status(401).json({ error: 'Invalid or expired token' });
+  } finally {
+    await prisma.$disconnect();
   }
 }

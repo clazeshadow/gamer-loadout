@@ -1,5 +1,7 @@
-import { sql } from '@vercel/postgres';
+import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
+
+const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -14,11 +16,11 @@ export default async function handler(req, res) {
 
   try {
     // Check if user exists
-    const result = await sql`
-      SELECT id, email FROM users WHERE email = ${email}
-    `;
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
 
-    if (result.rows.length === 0) {
+    if (!user) {
       // Don't reveal that the email doesn't exist for security
       return res.status(200).json({ 
         success: true, 
@@ -31,11 +33,13 @@ export default async function handler(req, res) {
     const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
 
     // Store reset token
-    await sql`
-      UPDATE users
-      SET reset_token = ${resetToken}, reset_token_expiry = ${resetTokenExpiry.toISOString()}
-      WHERE email = ${email}
-    `;
+    await prisma.user.update({
+      where: { email },
+      data: {
+        resetToken,
+        resetTokenExpiry
+      }
+    });
 
     // In production, send email here
     // For now, return the token (in production, remove this!)
@@ -50,5 +54,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Password reset error:', error);
     return res.status(500).json({ error: 'Password reset failed' });
+  } finally {
+    await prisma.$disconnect();
   }
 }

@@ -1,7 +1,8 @@
-import { sql } from '@vercel/postgres';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
 export default async function handler(req, res) {
@@ -17,17 +18,13 @@ export default async function handler(req, res) {
 
   try {
     // Find user
-    const result = await sql`
-      SELECT id, email, password, tier, created_at
-      FROM users
-      WHERE email = ${email}
-    `;
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
 
-    if (result.rows.length === 0) {
+    if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-
-    const user = result.rows[0];
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password);
@@ -48,12 +45,14 @@ export default async function handler(req, res) {
         id: user.id,
         email: user.email,
         tier: user.tier,
-        createdAt: user.created_at
+        createdAt: user.createdAt
       },
       token
     });
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json({ error: 'Login failed' });
+  } finally {
+    await prisma.$disconnect();
   }
 }
