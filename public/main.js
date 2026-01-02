@@ -105,46 +105,6 @@ function renderLoadout(data){
     tipsDiv.appendChild(tipsContent)
     card.appendChild(tipsDiv)
   }
-  // Add images section if available
-  if (data.images && data.images.length > 0) {
-    const imagesDiv = document.createElement('div')
-    imagesDiv.className = 'weapon-images'
-    const imagesTitle = document.createElement('div')
-    imagesTitle.textContent = 'Items'
-    imagesTitle.style.fontWeight = 'bold'
-    imagesTitle.style.marginTop = '12px'
-    imagesDiv.appendChild(imagesTitle)
-    const imageGallery = document.createElement('div')
-    imageGallery.className = 'image-gallery'
-    imageGallery.style.display = 'flex'
-    imageGallery.style.gap = '8px'
-    imageGallery.style.marginTop = '8px'
-    imageGallery.style.flexWrap = 'wrap'
-    data.images.forEach(imgId => {
-      const imgContainer = document.createElement('div')
-      imgContainer.className = 'image-item'
-      imgContainer.style.textAlign = 'center'
-      const img = document.createElement('img')
-      img.src = getImageUrl(imgId)
-      img.alt = imgId
-      img.style.width = '80px'
-      img.style.height = '80px'
-      img.style.objectFit = 'cover'
-      img.style.borderRadius = '4px'
-      img.style.border = '1px solid rgba(255,255,255,0.2)'
-      img.onerror = function() { this.style.display = 'none' }
-      const label = document.createElement('div')
-      label.textContent = imgId.replace(/-/g, ' ')
-      label.style.fontSize = '0.75em'
-      label.style.marginTop = '4px'
-      label.style.textTransform = 'capitalize'
-      imgContainer.appendChild(img)
-      imgContainer.appendChild(label)
-      imageGallery.appendChild(imgContainer)
-    })
-    imagesDiv.appendChild(imageGallery)
-    card.appendChild(imagesDiv)
-  }
   wrapper.appendChild(card)
   stack.appendChild(wrapper)
   // Also update the history viewer
