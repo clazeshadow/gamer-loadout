@@ -120,7 +120,10 @@
                       <input type="email" id="signin-email" required autocomplete="username">
                     </label>
                     <label>Password
-                      <input type="password" id="signin-password" required autocomplete="current-password">
+                      <div style="position:relative">
+                        <input type="password" id="signin-password" required autocomplete="current-password" style="padding-right:50px">
+                        <button type="button" id="toggle-signin-password" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:4px">Show</button>
+                      </div>
                     </label>
                     <button type="submit">Sign In</button>
                   </form>
@@ -139,11 +142,17 @@
                       <input type="email" id="signup-email" required autocomplete="username">
                     </label>
                     <label>Password
-                      <input type="password" id="signup-password" required autocomplete="new-password" minlength="8">
+                      <div style="position:relative">
+                        <input type="password" id="signup-password" required autocomplete="new-password" minlength="8" style="padding-right:50px">
+                        <button type="button" id="toggle-signup-password" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:4px">Show</button>
+                      </div>
                       <small style="color:var(--muted)">At least 8 characters</small>
                     </label>
                     <label>Confirm Password
-                      <input type="password" id="signup-confirm" required autocomplete="new-password" minlength="8">
+                      <div style="position:relative">
+                        <input type="password" id="signup-confirm" required autocomplete="new-password" minlength="8" style="padding-right:50px">
+                        <button type="button" id="toggle-signup-confirm" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:4px">Show</button>
+                      </div>
                     </label>
                     <button type="submit">Create Account</button>
                   </form>

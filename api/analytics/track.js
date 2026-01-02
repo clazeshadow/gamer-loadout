@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   const { type, data } = req.body;
 
   try {
+    // Check if tables exist first
     if (type === 'visit') {
       // Track site visit
       await prisma.siteVisit.create({

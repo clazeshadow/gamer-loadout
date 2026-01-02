@@ -1063,6 +1063,27 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
 // Authentication functions
 function initAuth() {
+  // Password visibility toggles
+  const setupPasswordToggle = (toggleId, inputId) => {
+    const toggle = document.getElementById(toggleId);
+    const input = document.getElementById(inputId);
+    if (toggle && input) {
+      toggle.addEventListener('click', () => {
+        if (input.type === 'password') {
+          input.type = 'text';
+          toggle.textContent = 'Hide';
+        } else {
+          input.type = 'password';
+          toggle.textContent = 'Show';
+        }
+      });
+    }
+  };
+  
+  setupPasswordToggle('toggle-signin-password', 'signin-password');
+  setupPasswordToggle('toggle-signup-password', 'signup-password');
+  setupPasswordToggle('toggle-signup-confirm', 'signup-confirm');
+  
   // Check if user is already logged in
   const token = localStorage.getItem('auth_token');
   if (token) {
@@ -1348,7 +1369,7 @@ async function trackVisit(page) {
       body: JSON.stringify({ type: 'visit', data: { page } })
     });
   } catch (error) {
-    console.error('Failed to track visit:', error);
+    // Silently fail - analytics shouldn't block functionality
   }
 }
 
@@ -1360,7 +1381,7 @@ async function trackGame(gameName, platform) {
       body: JSON.stringify({ type: 'game', data: { gameName, platform } })
     });
   } catch (error) {
-    console.error('Failed to track game:', error);
+    // Silently fail - analytics shouldn't block functionality
   }
 }
 

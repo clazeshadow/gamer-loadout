@@ -7,8 +7,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "node ./scripts/ci-check.js",
-    "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma migrate deploy"
+    "postinstall": "prisma generate"
   },
   "author": "",
   "license": "MIT",
