@@ -739,8 +739,7 @@ async function initGames(){
   if (!listEl || !detailEl || !search) return
 
   let data = { games: [] }
-  const q = `?${VERSION_TAG}`
-  const fallbacks = [`/data/games.json${q}`, `./data/games.json${q}`, `/public/data/games.json${q}`]
+  const fallbacks = [`/data/games.json`, `./data/games.json`]
   let loaded = false
   for (const path of fallbacks){
     if (loaded) break
@@ -1207,7 +1206,7 @@ function populateGames(){
 
 // Load a game's platform-specific loadout into the Home generator
 function loadIntoGenerator(gameId, platform){
-  fetch(`/data/games.json?${VERSION_TAG}`).then(r=>r.json()).then(d=>{
+  fetch(`/data/games.json`).then(r=>r.json()).then(d=>{
     const g = d.games.find(x=>x.id===gameId)
     if (!g) return
     const pf = (g.platforms||[]).find(p=>p.platform===platform) || (g.platforms||[])[0]
