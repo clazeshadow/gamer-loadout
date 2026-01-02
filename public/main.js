@@ -1223,6 +1223,11 @@ function initAuth() {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('auth_token');
       hideUserProfile();
+      // Reset form status messages
+      document.getElementById('signin-status').textContent = '';
+      document.getElementById('signin-status').style.color = 'var(--muted)';
+      document.getElementById('signup-status').textContent = '';
+      document.getElementById('signup-status').style.color = 'var(--muted)';
     });
   }
 
@@ -1267,12 +1272,28 @@ async function verifyToken(token) {
     if (response.ok) {
       const data = await response.json();
       displayUserProfile(data.user);
+      // Set up periodic token verification (every hour)
+      setInterval(() => {
+        const storedToken = localStorage.getItem('auth_token');
+        if (storedToken) {
+          fetch('/api/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${storedToken}`
+            }
+          }).catch(() => {
+            // Token expired, clear it
+            localStorage.removeItem('auth_token');
+          });
+        }
+      }, 60 * 60 * 1000); // 1 hour
     } else {
       localStorage.removeItem('auth_token');
+      hideUserProfile();
     }
   } catch (error) {
     console.error('Token verification failed:', error);
     localStorage.removeItem('auth_token');
+    hideUserProfile();
   }
 }
 
