@@ -291,11 +291,47 @@ function initHome(){
         const base = pf.recommendedLoadout || {}
         const variant = (base.variants && base.variants[playstyle]) ? base.variants[playstyle] : null
         const chosen = variant || base
+        
+        // Build comprehensive loadout from all available fields
+        const weaponName = chosen.weapon || chosen.primary || chosen.slot1 || chosen.legend || 'Recommended Loadout'
+        const attachments = []
+        const perks = []
+        
+        // Collect all loadout items
+        Object.keys(chosen).forEach(key => {
+          const value = chosen[key]
+          if (!value) return
+          
+          // Skip certain metadata fields
+          if (['tips', 'images', 'source', 'perks', 'attachments'].includes(key)) {
+            if (key === 'perks' && Array.isArray(value)) perks.push(...value)
+            if (key === 'attachments' && Array.isArray(value)) attachments.push(...value)
+            return
+          }
+          
+          // Add weapon/equipment fields as attachments
+          if (typeof value === 'string') {
+            attachments.push(`${key}: ${value}`)
+          } else if (Array.isArray(value)) {
+            attachments.push(`${key}: ${value.join(', ')}`)
+          } else if (typeof value === 'object') {
+            Object.entries(value).forEach(([k, v]) => {
+              if (Array.isArray(v)) {
+                attachments.push(`${k}: ${v.join(', ')}`)
+              } else {
+                attachments.push(`${k}: ${v}`)
+              }
+            })
+          }
+        })
+        
         out = {
-          weapon: chosen.primary || chosen.primary || 'Recommended Primary',
-          attachments: chosen.attachments || [],
-          perks: chosen.perks || [],
-          source: playstyle === 'aggressive' ? 'preset' : 'ai'
+          weapon: weaponName,
+          attachments: attachments.length > 0 ? attachments : chosen.attachments || [],
+          perks: perks.length > 0 ? perks : chosen.perks || [],
+          tips: chosen.tips,
+          images: chosen.images,
+          source: variant ? 'preset' : 'ai'
         }
       } else {
         out = mockLoadout(gameId, playstyle)
