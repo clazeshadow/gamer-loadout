@@ -225,9 +225,29 @@ button:active{
   padding:12px 0;
 }
 
+.plan-header{
+  padding:16px 24px 0 24px;
+}
+
+.plan-name{
+  font-size:18px;
+  font-weight:700;
+}
+
+.plan-price{
+  font-size:20px;
+  margin-top:4px;
+}
+
+.plan-meta{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:2px;
+}
+
 .plan ul{
   list-style:none;
-  padding:20px 24px;
+  padding:12px 24px 20px 24px;
   margin:0;
 }
 
@@ -250,6 +270,10 @@ button:active{
 .plan button{
   width:calc(100% - 48px);
   margin:0 24px 24px;
+}
+
+#checkout-panel{
+  max-width:520px;
 }
 
 /* Results */

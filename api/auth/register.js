@@ -40,18 +40,19 @@ export default async function handler(req, res) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user with free tier
+    // Create user with free tier and default free subscription marker
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        tier: 'free'
+        tier: 'free',
+        subscription: 'x-vanguard'
       }
     });
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user.id, email: user.email, tier: user.tier },
+      { userId: user.id, email: user.email, tier: user.tier, subscription: user.subscription },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -62,6 +63,7 @@ export default async function handler(req, res) {
         id: user.id,
         email: user.email,
         tier: user.tier,
+        subscription: user.subscription,
         createdAt: user.createdAt
       },
       token

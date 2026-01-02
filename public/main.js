@@ -18,6 +18,33 @@ function mockLoadout(game, playstyle) {
   }
 }
 
+function getImageUrl(imageId) {
+  const placeholder = '/assets/weapons/placeholder.svg'
+  const imageMap = { default: placeholder }
+  ;[
+    'smg','shotgun','ar','lmg','dmr','sniper','br','grenade','frag-grenade','semtex','smoke','arc-star','thermite','flash','stun','molotov','hegrenade','heartbeat','mine','munitions','dead-silence','healing','shield','armor','helmet','defuse-kit','r4c','pistol','revolver','ak47','m4a4','m4a1s','sg553','aug','deagle','cz75','tec9','m762','rg15','ks79','breach-rounds','breach-charge','claymore','gas-grenade','wire','impact','knife','sticky-bomb','emp','vehicle','ammo-crate','med-pen','repair-tool','c4','motion-sensor','beacon','shieldgear','mirror','portal','decoy','teleport','flashbang','dash','knives','orb','slow','heal','wall','res','trapwire','cage','camera','neural','threat-sensor','plasma-grenade','commando','sidekick','br75','mangler','grappleshot','sword','disruptor','drop-wall','dynamo','hydra','trophy'
+  ].forEach(id => { imageMap[id] = placeholder })
+  return imageMap[imageId] || imageMap.default
+}
+
+const PLAN_CONFIG = {
+  'x-vanguard': { name: 'X-Vanguard', price: '$0 · forever', limit: 10, unlimited: false },
+  'x-elite': { name: 'X-Elite', price: '$5 / month', limit: null, unlimited: true },
+  'x-ascended': { name: 'X-Ascended', price: '$60 one-time', limit: null, unlimited: true }
+}
+
+function formatPlan(plan) {
+  const cfg = PLAN_CONFIG[plan] || { name: 'Free', price: '', unlimited: false, limit: 10 }
+  return cfg.name
+}
+
+function planLimitCopy(plan) {
+  const cfg = PLAN_CONFIG[plan]
+  if (!cfg) return '10/day'
+  if (cfg.unlimited) return 'Unlimited'
+  return `${cfg.limit}/day`
+}
+
 function renderLoadout(data){
   const result = document.getElementById('result')
   // Remove hint if present, but never clear the stack except by explicit user action or navigation
@@ -62,6 +89,62 @@ function renderLoadout(data){
   data.perks.forEach(p => { const li = document.createElement('li'); li.textContent = p; perksList.appendChild(li) })
   card.appendChild(perksTitle)
   card.appendChild(perksList)
+  // Add tips section if available
+  if (data.tips) {
+    const tipsDiv = document.createElement('div')
+    tipsDiv.className = 'loadout-tips'
+    const tipsTitle = document.createElement('div')
+    tipsTitle.textContent = 'Tips'
+    tipsTitle.style.fontWeight = 'bold'
+    tipsTitle.style.marginTop = '12px'
+    const tipsContent = document.createElement('p')
+    tipsContent.textContent = data.tips
+    tipsContent.style.margin = '8px 0 0 0'
+    tipsContent.style.fontSize = '0.9em'
+    tipsDiv.appendChild(tipsTitle)
+    tipsDiv.appendChild(tipsContent)
+    card.appendChild(tipsDiv)
+  }
+  // Add images section if available
+  if (data.images && data.images.length > 0) {
+    const imagesDiv = document.createElement('div')
+    imagesDiv.className = 'weapon-images'
+    const imagesTitle = document.createElement('div')
+    imagesTitle.textContent = 'Items'
+    imagesTitle.style.fontWeight = 'bold'
+    imagesTitle.style.marginTop = '12px'
+    imagesDiv.appendChild(imagesTitle)
+    const imageGallery = document.createElement('div')
+    imageGallery.className = 'image-gallery'
+    imageGallery.style.display = 'flex'
+    imageGallery.style.gap = '8px'
+    imageGallery.style.marginTop = '8px'
+    imageGallery.style.flexWrap = 'wrap'
+    data.images.forEach(imgId => {
+      const imgContainer = document.createElement('div')
+      imgContainer.className = 'image-item'
+      imgContainer.style.textAlign = 'center'
+      const img = document.createElement('img')
+      img.src = getImageUrl(imgId)
+      img.alt = imgId
+      img.style.width = '80px'
+      img.style.height = '80px'
+      img.style.objectFit = 'cover'
+      img.style.borderRadius = '4px'
+      img.style.border = '1px solid rgba(255,255,255,0.2)'
+      img.onerror = function() { this.style.display = 'none' }
+      const label = document.createElement('div')
+      label.textContent = imgId.replace(/-/g, ' ')
+      label.style.fontSize = '0.75em'
+      label.style.marginTop = '4px'
+      label.style.textTransform = 'capitalize'
+      imgContainer.appendChild(img)
+      imgContainer.appendChild(label)
+      imageGallery.appendChild(imgContainer)
+    })
+    imagesDiv.appendChild(imageGallery)
+    card.appendChild(imagesDiv)
+  }
   wrapper.appendChild(card)
   stack.appendChild(wrapper)
   // Also update the history viewer
@@ -119,6 +202,38 @@ function showPage(id){
   }
 }
 
+async function consumeGenerationOrBlock(){
+  const freeLimit = PLAN_CONFIG['x-vanguard'].limit || 10
+  const token = localStorage.getItem('auth_token')
+  const todayKey = `anon_usage_${new Date().toISOString().slice(0,10)}`
+
+  // Anonymous users: local fallback limit
+  if (!token) {
+    const current = Number(localStorage.getItem(todayKey) || 0)
+    if (current >= freeLimit) {
+      throw new Error('Free plan limit reached (10/day). Sign in or upgrade to go unlimited.')
+    }
+    localStorage.setItem(todayKey, current + 1)
+    return { plan: 'anon', remaining: freeLimit - (current + 1) }
+  }
+
+  try {
+    const res = await fetch('/api/usage/consume', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to record usage')
+    }
+    return data
+  } catch (err) {
+    throw err
+  }
+}
+
 // Home: generate loadout
 function initHome(){
   const btn = document.getElementById('generate')
@@ -146,12 +261,21 @@ function initHome(){
     })
   }
 
-  btn.addEventListener('click', ()=>{
+  btn.addEventListener('click', async ()=>{
     const gameId = document.getElementById('game').value
     const playstyle = document.getElementById('playstyle').value
     const platform = document.getElementById('platform') ? document.getElementById('platform').value : null
     btn.disabled = true
     btn.textContent = 'Generating...'
+
+    try {
+      await consumeGenerationOrBlock()
+    } catch (err) {
+      btn.disabled = false
+      btn.textContent = 'Generate Loadout'
+      alert(err.message || 'Free plan limit reached. Upgrade for unlimited generations.')
+      return
+    }
     
     // Track game analytics
     trackGame(gameId, platform);
@@ -504,10 +628,105 @@ function initSubscribe(){
   document.querySelectorAll('.subscribe').forEach(b=>{
     b.addEventListener('click', ()=>{
       const plan = b.getAttribute('data-plan')
-      const out = document.getElementById('subscribe-result')
-      out.innerHTML = `<div class="panel">Selected plan: <strong>${plan}</strong>. (No payment connected in demo.)</div>`
+      if (plan === 'x-vanguard') {
+        alert('X-Vanguard is always free! Sign up to get started.')
+        showPage('account')
+        return
+      }
+      // Go to checkout with plan pre-filled
+      const form = document.getElementById('checkout-form')
+      const planInput = document.getElementById('checkout-plan-input')
+      const summary = document.getElementById('checkout-summary')
+      const cfg = PLAN_CONFIG[plan]
+      if (!cfg) return
+      planInput.value = plan
+      summary.innerHTML = `<strong>Plan:</strong> ${cfg.name}<br><strong>Price:</strong> ${cfg.price}<br><small class="muted">Generations: ${planLimitCopy(plan)}</small>`
+      form.style.display = 'block'
+      showPage('checkout')
     })
   })
+
+  // Checkout form
+  const checkoutForm = document.getElementById('checkout-form')
+  if (checkoutForm) {
+    checkoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const email = document.getElementById('checkout-email').value
+      const plan = document.getElementById('checkout-plan-input').value
+      const status = document.getElementById('checkout-status')
+      const submitBtn = document.getElementById('checkout-submit')
+      status.textContent = 'Creating checkout session...'
+      submitBtn.disabled = true
+
+      try {
+        const token = localStorage.getItem('auth_token') || ''
+        const response = await fetch('/api/stripe/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+          },
+          body: JSON.stringify({ plan, email })
+        })
+
+        const data = await response.json()
+        if (response.ok && data.url) {
+          window.location.href = data.url
+        } else {
+          status.textContent = data.error || 'Checkout creation failed'
+          status.style.color = '#ff4444'
+          submitBtn.disabled = false
+        }
+      } catch (error) {
+        status.textContent = 'Network error creating checkout'
+        status.style.color = '#ff4444'
+        submitBtn.disabled = false
+      }
+    })
+  }
+}
+
+async function consumeGenerationOrBlock() {
+  const token = localStorage.getItem('auth_token')
+  if (!token) {
+    throw new Error('Sign in to generate loadouts')
+  }
+
+  const res = await fetch('/api/usage/consume', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
+
+  if (!res.ok) {
+    if (res.status === 429) {
+      const err = await res.json()
+      throw new Error(`Daily limit (${err.limit || 10}) reached. Upgrade for unlimited generations.`)
+    }
+    throw new Error('Failed to validate usage')
+  }
+  return res.json()
+}
+
+async function confirmSubscription(sessionId) {
+  const token = localStorage.getItem('auth_token')
+  if (!token) return
+  try {
+    const res = await fetch('/api/subscription/confirm', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ session_id: sessionId })
+    })
+    if (res.ok) {
+      const data = await res.json()
+      displayUserProfile(data.user)
+      alert(`Subscription confirmed! You are now on ${formatPlan(data.user.subscription)}.`)
+    }
+  } catch (error) {
+    console.error('Subscription confirmation error:', error)
+  }
 }
 
 const VERSION_TAG = 'v20251231b'
@@ -1059,6 +1278,17 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   initSettingsGenerator();
   initSubscribe();
 
+  // Check for Stripe checkout session redirect
+  const params = new URLSearchParams(window.location.search)
+  const sessionId = params.get('session_id')
+  if (sessionId) {
+    // clear query params from address bar
+    const cleanUrl = window.location.origin + window.location.pathname + window.location.hash
+    window.history.replaceState({}, '', cleanUrl)
+    // confirm subscription in background
+    confirmSubscription(sessionId)
+  }
+
 });
 
 // Authentication functions
@@ -1301,7 +1531,8 @@ function displayUserProfile(user) {
   document.getElementById('auth-forms').style.display = 'none';
   document.getElementById('account-view').style.display = 'block';
   document.getElementById('user-email').textContent = user.email;
-  document.getElementById('user-tier').textContent = user.tier;
+  const plan = user.subscription || user.tier || 'free'
+  document.getElementById('user-tier').textContent = formatPlan(plan);
   
   const createdDate = new Date(user.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',

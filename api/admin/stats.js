@@ -59,7 +59,7 @@ export default async function handler(req, res) {
     const subscribedUsers = await prisma.user.findMany({
       where: {
         subscription: {
-          not: null
+          in: ['x-elite', 'x-ascended']
         }
       },
       select: {

@@ -181,44 +181,77 @@
       </section>
 
       <section id="subscribe" class="page">
-        <h2>Subscribe</h2>
-        <p class="lead">Choose a plan to get AI-optimized loadouts and extra features.</p>
+        <h2>Pricing</h2>
+        <p class="lead">Pick the tier that matches your grind. Free is capped at 10 generations/day; paid tiers are unlimited.</p>
 
         <div class="plans">
-          <div class="card plan">
-            <img src="/assets/x-vanguard.png" alt="X-Vanguard" style="width:100%;max-width:280px;margin:0 auto 20px;display:block">
+          <div class="card plan" data-plan-card>
+            <img src="/assets/x-vanguard.png" alt="X-Vanguard" style="width:100%;max-width:280px;margin:0 auto 12px;display:block">
+            <div class="plan-header">
+              <div class="plan-name">X-Vanguard</div>
+              <div class="plan-price">$0 · forever</div>
+              <div class="plan-meta">10 generations per day</div>
+            </div>
             <ul>
-              <li>10 daily chats for loadout suggestions</li>
-              <li>Basic settings tips</li>
-              <li>Community access</li>
+              <li>Daily loadout & settings generation (10/day)</li>
+              <li>Core meta recommendations</li>
+              <li>Save history locally</li>
             </ul>
-            <button class="subscribe" data-plan="x-vanguard">Join Free</button>
+            <button class="subscribe" data-plan="x-vanguard">Start Free</button>
           </div>
 
-          <div class="card plan">
-            <img src="/assets/x-elite.png" alt="X-Elite" style="width:100%;max-width:280px;margin:0 auto 20px;display:block">
+          <div class="card plan" data-plan-card>
+            <img src="/assets/x-elite.png" alt="X-Elite" style="width:100%;max-width:280px;margin:0 auto 12px;display:block">
+            <div class="plan-header">
+              <div class="plan-name">X-Elite</div>
+              <div class="plan-price">$5 / month</div>
+              <div class="plan-meta">Unlimited generations</div>
+            </div>
             <ul>
-              <li>Unlimited chats</li>
-              <li>Personalized loadouts & settings</li>
-              <li>Game recommendations based on preferences</li>
+              <li>Unlimited loadout & settings generations</li>
+              <li>Personalized meta tweaks by playstyle</li>
+              <li>Faster updates to new seasons</li>
               <li>Priority support</li>
             </ul>
-            <button class="subscribe" data-plan="x-elite">Subscribe Now</button>
+            <button class="subscribe" data-plan="x-elite">Subscribe with Stripe</button>
           </div>
 
-          <div class="card plan">
-            <img src="/assets/x-ascended.png" alt="X-Ascended" style="width:100%;max-width:280px;margin:0 auto 20px;display:block">
+          <div class="card plan" data-plan-card>
+            <img src="/assets/x-ascended.png" alt="X-Ascended" style="width:100%;max-width:280px;margin:0 auto 12px;display:block">
+            <div class="plan-header">
+              <div class="plan-name">X-Ascended</div>
+              <div class="plan-price">$60 one-time</div>
+              <div class="plan-meta">Unlimited, lifetime access</div>
+            </div>
             <ul>
-              <li>All X-Elite benefits</li>
-              <li>Priority for new testing features</li>
-              <li>Lifetime access</li>
+              <li>All X-Elite benefits for life</li>
+              <li>Early access to new game support</li>
               <li>Exclusive community badge</li>
+              <li>Founder credit</li>
             </ul>
             <button class="subscribe" data-plan="x-ascended">Get Lifetime Access</button>
           </div>
         </div>
 
         <div id="subscribe-result" class="result"></div>
+      </section>
+
+      <section id="checkout" class="page">
+        <h2>Checkout</h2>
+        <p class="lead">Secure payments are handled by Stripe. Sign in first so we can attach your plan to your account.</p>
+        <div class="panel" id="checkout-panel">
+          <div id="checkout-summary">
+            <div class="muted">No plan selected yet. Pick a plan from the pricing page.</div>
+          </div>
+          <form id="checkout-form" style="margin-top:16px;display:none">
+            <label>Email for receipt
+              <input type="email" id="checkout-email" placeholder="you@example.com" required>
+            </label>
+            <input type="hidden" id="checkout-plan-input">
+            <button type="submit" id="checkout-submit">Proceed to Stripe</button>
+            <div id="checkout-status" class="muted" style="margin-top:8px"></div>
+          </form>
+        </div>
       </section>
 
       <section id="about" class="page">

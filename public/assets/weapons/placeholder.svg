@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none">
+  <rect x="4" y="4" width="112" height="112" rx="12" fill="#0f1724" stroke="#35d054" stroke-width="4"/>
+  <path d="M30 70 L60 40 L90 70" stroke="#35d054" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="60" cy="78" r="8" fill="#35d054"/>
+  <text x="60" y="102" text-anchor="middle" fill="#e6eef8" font-family="Arial" font-size="14" font-weight="bold">IMAGE</text>
+</svg>

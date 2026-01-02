@@ -15,13 +15,27 @@ model User {
   email String  @unique
   password String
   tier  String  @default("free") // "free" or "paid"
-  subscription String? // "x-elite" or "x-ascended"
+  subscription String? // "x-vanguard" (free), "x-elite", "x-ascended"
+  stripeCustomerId String?
+  stripeSubscriptionId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   resetToken String?
   resetTokenExpiry DateTime?
+  generations GenerationUsage[]
 
   @@map("users")
+}
+
+model GenerationUsage {
+  id Int @id @default(autoincrement())
+  userId Int
+  date DateTime
+  count Int @default(0)
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, date])
+  @@map("generation_usage")
 }
 
 model SiteVisit {

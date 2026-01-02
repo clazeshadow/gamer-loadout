@@ -27,6 +27,7 @@ export default async function handler(req, res) {
         id: true,
         email: true,
         tier: true,
+        subscription: true,
         createdAt: true
       }
     });
@@ -41,6 +42,7 @@ export default async function handler(req, res) {
         id: user.id,
         email: user.email,
         tier: user.tier,
+        subscription: user.subscription,
         createdAt: user.createdAt
       }
     });
