@@ -1497,28 +1497,32 @@ async function verifyToken(token) {
     if (response.ok) {
       const data = await response.json();
       displayUserProfile(data.user);
-      // Set up periodic token verification (every hour)
-      setInterval(() => {
+      // Periodic verification: only clear on explicit auth failure
+      setInterval(async () => {
         const storedToken = localStorage.getItem('auth_token');
-        if (storedToken) {
-          fetch('/api/auth/me', {
-            headers: {
-              'Authorization': `Bearer ${storedToken}`
-            }
-          }).catch(() => {
-            // Token expired, clear it
-            localStorage.removeItem('auth_token');
+        if (!storedToken) return;
+        try {
+          const r = await fetch('/api/auth/me', {
+            headers: { 'Authorization': `Bearer ${storedToken}` }
           });
+          if (r.status === 401 || r.status === 404) {
+            localStorage.removeItem('auth_token');
+            hideUserProfile();
+          }
+        } catch (err) {
+          // Keep user signed in on transient errors
+          console.warn('Background auth check skipped:', err.message);
         }
       }, 60 * 60 * 1000); // 1 hour
     } else {
-      localStorage.removeItem('auth_token');
-      hideUserProfile();
+      if (response.status === 401 || response.status === 404) {
+        localStorage.removeItem('auth_token');
+        hideUserProfile();
+      }
     }
   } catch (error) {
     console.error('Token verification failed:', error);
-    localStorage.removeItem('auth_token');
-    hideUserProfile();
+    // Do not auto-logout on network errors
   }
 }
 

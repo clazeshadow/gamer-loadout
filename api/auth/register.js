@@ -53,8 +53,7 @@ export default async function handler(req, res) {
     // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email, tier: user.tier, subscription: user.subscription },
-      JWT_SECRET,
-      { expiresIn: '7d' }
+      JWT_SECRET
     );
 
     return res.status(201).json({
