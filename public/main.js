@@ -32,6 +32,11 @@ const PLAN_CONFIG = {
   'x-elite': { name: 'X-Elite', price: '$5 / month', limit: null, unlimited: true },
   'x-ascended': { name: 'X-Ascended', price: '$60 one-time', limit: null, unlimited: true }
 }
+const PAID_PLANS = ['x-elite', 'x-ascended']
+
+function isPaidPlan(plan) {
+  return PAID_PLANS.includes(plan)
+}
 
 function formatPlan(plan) {
   const cfg = PLAN_CONFIG[plan] || { name: 'Free', price: '', unlimited: false, limit: 10 }
@@ -725,6 +730,86 @@ async function confirmSubscription(sessionId) {
   }
 }
 
+function appendChatMessage(prompt, reply, cached) {
+  const log = document.getElementById('chat-log')
+  if (!log) return
+  const card = document.createElement('div')
+  card.className = 'card'
+  card.style.marginBottom = '12px'
+  card.innerHTML = `
+    <div style="font-weight:600;margin-bottom:6px">You</div>
+    <div style="margin-bottom:8px">${prompt.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    <div style="font-weight:600;margin-bottom:6px">LoadoutX AI ${cached ? '<span class="badge">cached</span>' : ''}</div>
+    <div>${reply.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+  `
+  log.prepend(card)
+}
+
+function initChat() {
+  const sendBtn = document.getElementById('chat-send')
+  const promptInput = document.getElementById('chat-input')
+  const statusEl = document.getElementById('chat-status')
+  const locked = document.getElementById('chat-locked')
+
+  const upgradeBtn = document.getElementById('chat-upgrade')
+  if (upgradeBtn) {
+    upgradeBtn.addEventListener('click', () => showPage('subscribe'))
+  }
+
+  updateChatGate(window.CURRENT_USER || null)
+
+  if (sendBtn && promptInput) {
+    sendBtn.addEventListener('click', async () => {
+      const prompt = (promptInput.value || '').trim()
+      if (!prompt) {
+        statusEl.textContent = 'Enter what kind of games you want.'
+        statusEl.style.color = '#ffcc66'
+        return
+      }
+      const token = localStorage.getItem('auth_token')
+      if (!token) {
+        statusEl.textContent = 'Sign in with a paid plan to chat.'
+        statusEl.style.color = '#ff4444'
+        return
+      }
+
+      statusEl.textContent = 'Thinking...'
+      statusEl.style.color = 'var(--muted)'
+      sendBtn.disabled = true
+
+      try {
+        const res = await fetch('/api/chat/suggest', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ prompt })
+        })
+        const data = await res.json()
+        if (!res.ok) {
+          statusEl.textContent = data.error || 'Chat failed'
+          statusEl.style.color = '#ff4444'
+        } else {
+          appendChatMessage(prompt, data.reply, data.cached)
+          statusEl.textContent = data.cached ? 'Served from cache to save tokens.' : 'Reply generated.'
+          statusEl.style.color = 'var(--accent)'
+          promptInput.value = ''
+        }
+      } catch (err) {
+        statusEl.textContent = 'Network error talking to AI.'
+        statusEl.style.color = '#ff4444'
+      } finally {
+        sendBtn.disabled = false
+      }
+    })
+  }
+
+  if (locked) {
+    updateChatGate(window.CURRENT_USER || null)
+  }
+}
+
 const VERSION_TAG = 'v20251231b'
 
 // Games page
@@ -1272,6 +1357,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   initHome();
   initSettingsGenerator();
   initSubscribe();
+  initChat();
 
   // Check for Stripe checkout session redirect
   const params = new URLSearchParams(window.location.search)
@@ -1527,6 +1613,7 @@ async function verifyToken(token) {
 }
 
 function displayUserProfile(user) {
+  window.CURRENT_USER = user
   document.getElementById('auth-forms').style.display = 'none';
   document.getElementById('account-view').style.display = 'block';
   document.getElementById('user-email').textContent = user.email;
@@ -1539,14 +1626,26 @@ function displayUserProfile(user) {
     day: 'numeric'
   });
   document.getElementById('user-created').textContent = createdDate;
+  updateChatGate(user)
 }
 
 function hideUserProfile() {
+  window.CURRENT_USER = null
   document.getElementById('auth-forms').style.display = 'block';
   document.getElementById('account-view').style.display = 'none';
   document.getElementById('signin-container').style.display = 'block';
   document.getElementById('signup-container').style.display = 'none';
   document.getElementById('forgot-container').style.display = 'none';
+  updateChatGate(null)
+}
+
+function updateChatGate(user) {
+  const plan = (user && (user.subscription || user.tier)) || 'x-vanguard'
+  const allowed = isPaidPlan(plan)
+  const locked = document.getElementById('chat-locked')
+  const panel = document.getElementById('chat-panel')
+  if (locked) locked.style.display = allowed ? 'none' : 'block'
+  if (panel) panel.style.display = allowed ? 'block' : 'none'
 }
 
 // Admin Dashboard

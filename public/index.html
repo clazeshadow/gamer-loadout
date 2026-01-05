@@ -19,6 +19,7 @@
         <nav class="nav">
           <a href="#home" data-route>Home</a>
           <a href="#games" data-route>Games</a>
+          <a href="#chat" data-route>AI Chat</a>
           <a href="#subscribe" data-route>Subscribe</a>
           <a href="#about" data-route>About</a>
           <a href="#account" data-route>Account</a>
@@ -94,6 +95,26 @@
         <section id="settings-result" class="result">
           <div id="settings-stack" style="display:flex;flex-wrap:wrap;gap:20px;margin-top:8px;align-items:flex-start;justify-content:flex-start;min-height:200px"></div>
         </section>
+      </section>
+
+      <section id="chat" class="page">
+        <h2>AI Game Scout (Paid)</h2>
+        <p class="lead">Get rapid game suggestions tailored to your vibe. Available for X-Elite and X-Ascended members.</p>
+
+        <div id="chat-locked" class="panel" style="display:block">
+          <h3 style="margin-top:0">Locked for paid tiers</h3>
+          <p class="muted">Sign in with X-Elite or X-Ascended to chat with the AI. You can upgrade any time.</p>
+          <button id="chat-upgrade" style="margin-top:8px">See plans</button>
+        </div>
+
+        <div id="chat-panel" class="panel" style="display:none">
+          <label>Tell us what you want to play
+            <textarea id="chat-input" rows="3" placeholder="e.g., I want fast-paced shooters with good co-op, or chill exploration RPGs"></textarea>
+          </label>
+          <button id="chat-send">Get Suggestions</button>
+          <div id="chat-status" class="muted" style="margin-top:8px"></div>
+          <div id="chat-log" class="result" style="margin-top:14px"></div>
+        </div>
       </section>
 
       <section id="account" class="page">
