@@ -36,6 +36,10 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('Checkout request:', { plan, email, decoded: decoded?.userId })
+    console.log('Stripe initialized:', !!stripe)
+    console.log('Price for plan:', priceMap[plan])
+    
     const session = await stripe.checkout.sessions.create({
       mode: plan === 'x-elite' ? 'subscription' : 'payment',
       line_items: [
@@ -54,9 +58,10 @@ export default async function handler(req, res) {
       cancel_url: `${origin}/#subscribe`
     })
 
+    console.log('Checkout session created:', session.id)
     return res.status(200).json({ url: session.url })
   } catch (error) {
-    console.error('Stripe checkout error:', error)
-    return res.status(500).json({ error: 'Failed to create checkout session' })
+    console.error('Stripe checkout error:', error.message, error)
+    return res.status(500).json({ error: 'Failed to create checkout session', details: error.message })
   }
 }
