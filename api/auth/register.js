@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
+const SPECIAL_ASC_EMAIL = 'danny.d.2026@loadotx.org';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -40,13 +41,15 @@ export default async function handler(req, res) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user with free tier and default free subscription marker
+    const isSpecialAsc = email.toLowerCase() === SPECIAL_ASC_EMAIL;
+
+    // Create user with default free tier, or elevate special account to ascended
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        tier: 'free',
-        subscription: 'x-vanguard'
+        tier: isSpecialAsc ? 'paid' : 'free',
+        subscription: isSpecialAsc ? 'x-ascended' : 'x-vanguard'
       }
     });
 

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
+const SPECIAL_ASC_EMAIL = 'danny.d.2026@loadotx.org';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -32,20 +33,29 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    // Elevate special account to ascended if needed
+    let effectiveUser = user;
+    if (user.email.toLowerCase() === SPECIAL_ASC_EMAIL && user.subscription !== 'x-ascended') {
+      effectiveUser = await prisma.user.update({
+        where: { id: user.id },
+        data: { subscription: 'x-ascended', tier: 'paid' }
+      });
+    }
+
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user.id, email: user.email, tier: user.tier, subscription: user.subscription },
+      { userId: effectiveUser.id, email: effectiveUser.email, tier: effectiveUser.tier, subscription: effectiveUser.subscription },
       JWT_SECRET
     );
 
     return res.status(200).json({
       success: true,
       user: {
-        id: user.id,
-        email: user.email,
-        tier: user.tier,
-        subscription: user.subscription,
-        createdAt: user.createdAt
+        id: effectiveUser.id,
+        email: effectiveUser.email,
+        tier: effectiveUser.tier,
+        subscription: effectiveUser.subscription,
+        createdAt: effectiveUser.createdAt
       },
       token
     });
