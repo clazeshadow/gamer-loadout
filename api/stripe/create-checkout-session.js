@@ -8,7 +8,7 @@ const priceMap = {
 }
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this'
 
-const stripe = stripeSecret ? new Stripe(stripeSecret, { apiVersion: '2024-06-20' }) : null
+const stripe = stripeSecret ? new Stripe(stripeSecret) : null
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
