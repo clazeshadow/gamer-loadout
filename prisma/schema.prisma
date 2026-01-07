@@ -23,6 +23,7 @@ model User {
   resetToken String?
   resetTokenExpiry DateTime?
   generations GenerationUsage[]
+  communityMessages CommunityMessage[]
 
   @@map("users")
 }
