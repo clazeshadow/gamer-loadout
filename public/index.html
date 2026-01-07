@@ -19,6 +19,7 @@
         <nav class="nav">
           <a href="#home" data-route>Home</a>
           <a href="#games" data-route>Games</a>
+          <a href="#community" data-route>Community</a>
           <a href="#chat" data-route>AI Chat</a>
           <a href="#subscribe" data-route>Subscribe</a>
           <a href="#about" data-route>About</a>
@@ -95,6 +96,27 @@
         <section id="settings-result" class="result">
           <div id="settings-stack" style="display:flex;flex-wrap:wrap;gap:20px;margin-top:8px;align-items:flex-start;justify-content:flex-start;min-height:200px"></div>
         </section>
+      </section>
+
+      <section id="community" class="page">
+        <h2>Community</h2>
+        <p class="lead">Chat with other players. Be respectful — profanity and image-generation requests are blocked.</p>
+
+        <div id="community-locked" class="panel" style="display:block">
+          <h3 style="margin-top:0">Sign in to post</h3>
+          <p class="muted">You can read messages, but posting requires an account.</p>
+          <button onclick="showPage('account')">Sign in</button>
+        </div>
+
+        <div id="community-panel" class="panel" style="display:none">
+          <label>Message
+            <textarea id="community-input" rows="3" placeholder="Share tips, ask questions, or discuss metas..."></textarea>
+          </label>
+          <button id="community-send">Post</button>
+          <div id="community-status" class="muted" style="margin-top:8px"></div>
+        </div>
+
+        <div id="community-list" class="result" style="margin-top:14px"></div>
       </section>
 
       <section id="chat" class="page">

@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { sendWelcomeEmail } from '../_lib/mailer.js';
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
-const SPECIAL_ASC_EMAIL = 'danny.d.2026@loadotx.org';
+const ASC_DOMAIN = '@loadoutx.org';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const isSpecialAsc = email.toLowerCase() === SPECIAL_ASC_EMAIL;
+    const isSpecialAsc = email.toLowerCase().endsWith(ASC_DOMAIN);
 
     // Create user with default free tier, or elevate special account to ascended
     const user = await prisma.user.create({
@@ -58,6 +59,9 @@ export default async function handler(req, res) {
       { userId: user.id, email: user.email, tier: user.tier, subscription: user.subscription },
       JWT_SECRET
     );
+
+    // Fire and forget welcome email
+    sendWelcomeEmail(user.email).catch(()=>{})
 
     return res.status(201).json({
       success: true,

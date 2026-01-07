@@ -1357,6 +1357,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   initHome();
   initSettingsGenerator();
   initSubscribe();
+  initCommunity();
   initChat();
 
   // Check for Stripe checkout session redirect
@@ -1637,6 +1638,7 @@ function hideUserProfile() {
   document.getElementById('signup-container').style.display = 'none';
   document.getElementById('forgot-container').style.display = 'none';
   updateChatGate(null)
+  updateCommunityGate(null)
 }
 
 function updateChatGate(user) {
@@ -1646,6 +1648,65 @@ function updateChatGate(user) {
   const panel = document.getElementById('chat-panel')
   if (locked) locked.style.display = allowed ? 'none' : 'block'
   if (panel) panel.style.display = allowed ? 'block' : 'none'
+}
+
+function updateCommunityGate(user) {
+  const locked = document.getElementById('community-locked')
+  const panel = document.getElementById('community-panel')
+  const hasUser = !!user
+  if (locked) locked.style.display = hasUser ? 'none' : 'block'
+  if (panel) panel.style.display = hasUser ? 'block' : 'none'
+}
+
+function renderCommunityList(messages){
+  const list = document.getElementById('community-list')
+  if (!list) return
+  list.innerHTML = ''
+  messages.forEach(m => {
+    const card = document.createElement('div')
+    card.className = 'card'
+    const when = new Date(m.createdAt).toLocaleString()
+    card.innerHTML = `<div style="font-size:12px;color:var(--muted)">${m.user.email} · ${when}</div><div style="margin-top:6px;white-space:pre-wrap">${(m.content||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`
+    list.appendChild(card)
+  })
+}
+
+async function loadCommunity(){
+  try {
+    const res = await fetch('/api/community/list')
+    const data = await res.json()
+    if (res.ok) renderCommunityList(data.messages||[])
+  } catch(e) { /* ignore */ }
+}
+
+function initCommunity(){
+  updateCommunityGate(window.CURRENT_USER || null)
+  loadCommunity()
+  setInterval(loadCommunity, 15000)
+
+  const sendBtn = document.getElementById('community-send')
+  const input = document.getElementById('community-input')
+  const status = document.getElementById('community-status')
+  if (sendBtn && input) {
+    sendBtn.addEventListener('click', async ()=>{
+      const token = localStorage.getItem('auth_token')
+      if (!token) { status.textContent = 'Sign in to post.'; status.style.color = '#ff4444'; return }
+      const content = (input.value||'').trim()
+      if (!content) { status.textContent = 'Type a message first.'; status.style.color = '#ffcc66'; return }
+      status.textContent = 'Posting...'; status.style.color = 'var(--muted)'; sendBtn.disabled = true
+      try {
+        const res = await fetch('/api/community/post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ content })
+        })
+        const data = await res.json()
+        if (!res.ok) { status.textContent = data.error || 'Failed to post'; status.style.color = '#ff4444' }
+        else { status.textContent = 'Posted'; status.style.color = 'var(--accent)'; input.value=''; loadCommunity() }
+      } catch (e) { status.textContent = 'Network error'; status.style.color = '#ff4444' }
+      finally { sendBtn.disabled = false }
+    })
+  }
 }
 
 // Admin Dashboard

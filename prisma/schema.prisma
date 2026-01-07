@@ -66,3 +66,14 @@ model ChatCache {
   
   @@map("chat_cache")
 }
+
+model CommunityMessage {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@map("community_messages")
+}
